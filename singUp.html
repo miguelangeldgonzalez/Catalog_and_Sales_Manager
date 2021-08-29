@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Catálogo</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/singUp.css">
+	<script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body>
+	
+
+
+	
+	<!-- Titulo -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a href="#" class="navbar-brand"><h1>Registro de Usuario</h1></a>
+	</nav>
+				
+	<!-- Modal para Mensajes -->
+	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Atención</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p class="text"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+<form id="formulario" enctype="multipart/form-data">
+	
+	<div class="container mt-3">
+
+		<div class="row">
+
+			<div class="col-4">		
+				<div class="card">
+					<div class="card-header text-center">Datos Personales</div>
+						<div class="card-body">
+
+						<div class="nombreDeUsuario">
+							<label>Nombre de Usuario</label>
+							<input class="form-control" name="username" id="username">
+							<div class="invalid-feedback">
+								El nombre de usuario ya existe.
+							</div>
+							<div class="valid-feedback">
+								Correcto.
+							</div>
+						</div>
+
+						<div class="nombres">
+							<label>Nombres</label>
+							<input class="form-control" name="nombres" id="nombres">
+							<div class="invalid-feedback">
+								Ingrese sus nombres.
+							</div>
+							<div class="valid-feedback">
+								Correcto.
+							</div>
+						</div>
+
+						<div class="apellidos">
+								<label>Apellidos</label>
+								<input class="form-control" name="apellidos" id="apellidos">
+								<div class="invalid-feedback">
+									Ingrese sus Apellidos.
+								</div>
+								<div class="valid-feedback">
+									Correcto.
+								</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="col-4">
+				<div class="card">
+					<div class="card-header text-center">Datos De Contacto y Contraseña</div>
+					<div class="card-body">
+
+						<div class="numeroCelular">
+							<label>Numero Celular</label>
+							<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" maxlength="11" name="celular" id="celular">
+							<div class="invalid-feedback">Ingrese un numero de cedula valido.</div>
+							<div class="valid-feedback">Correcto.</div>
+						</div>
+
+						<div class="correoElectronico">
+							<label>Correo Electrónico</label>
+							<input class="form-control" name="correo" id="correo">
+							<div class="invalid-feedback">Ingrese un correo electrónico valido, por ejemplo, nombre@direccion.com.</div>
+							<div class="valid-feedback">Correcto.</div>
+						</div>
+								
+						<div class="password">
+							<label for="password" class="form-label">Contraseña</label>
+							<input class="form-control" type="password" id="password" name='password'></input>
+							<div class="invalid-feedback">
+								La contraseña debe contener:
+									<ul>
+										<li>Al menos 5 caracteres</li>
+										<li>Números</li>
+										<li>Signos especiales</li>
+									</ul>
+							</div>
+							<div class="valid-feedback">Correcto</div>
+						</div>
+
+						<div class="confirmPassword">
+							<label for="password" class="form-label">Confirmar Contraseña</label>
+							<input class="form-control" type="password" id="confirmPassword"></input>
+							<div class="invalid-feedback">Las contraseñas no coinciden.</div>
+							<div class="valid-feedback">Correcto</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="row">
+		<div class="col-4"></div>
+		<div class="col-4" style="justify-content: center; display: flex;">
+			<input class="btn btn-success mt-3 px-5 py-2" onclick="confirm()" style="font-size: 1.5em;" type="button" id="e" value="Enviar">
+		</div>
+	</div>
+	</div>
+</form>	
+	
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/singUp.js"></script>
+</body>
+</html>

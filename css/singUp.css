@@ -1,0 +1,22 @@
+input[type=file]{
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    font-size: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    transition: color .15s;
+    background-color: #343a40;
+    color: white;
+    cursor: pointer;
+    padding: .375rem .75rem;
+}
+input[type=file]:hover{
+    background-color: #23272b;
+}
+.f{
+    padding: 1em;
+}
+.f:hover{
+    background-color: #cd3545;
+}

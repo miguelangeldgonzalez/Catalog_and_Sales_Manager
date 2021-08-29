@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav" id="nav">
+			  <li class="nav-item">
+				<a class="nav-link" aria-current="true" href="../../home.html" id="title"></a>
+			  </li>
+
+			  <li class='nav-item'>
+                <a class='nav-link active' href='#'>Empleados</a>
+              </li>
+			</ul>
+		  </div>
+
+		
+		<ul class="navbar-bar ml-auto">
+			<form class="form-inline my-2 my-lg-0">
+				<input type="button" class="btn btn-danger" value="Cerrar Sesion" id="close">
+			</form>
+		</ul>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-bordered my-4">
+					<thead>
+						<tr>
+							<td>Nombres</td>
+							<td>Apellidos</td>
+							<td>Numero Celular</td>
+							<td>Correo Electrónico</td>
+							<td>cargo</td>
+							<td class="table-control">Editar Cargo</td>
+							<td class="table-control">Eliminar</td>
+						</tr>
+					</thead>
+					<tbody id="employees">
+
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+    
+	<script src="../../js/jquery.js"></script>
+	<script src="employees.js"></script>
+</body>
+</html>
