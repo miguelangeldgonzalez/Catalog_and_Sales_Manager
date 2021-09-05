@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Catálogo</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<meta charset="UTF-8">
+	<style>
+		.table-stripped{
+			margin-top: 1em;
+		}
+		.table-stripped td{
+			width: 50%;
+		}
+	</style>
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav" id="nav">
+			  <li class="nav-item">
+				<a class="nav-link" href="#" id="title"></a>
+			  </li>
+
+			  <li class="nav-item">
+				<a class="nav-link active" aria-current="true" href="#">Dispositivos</a>
+			  </li>
+			</ul>
+		  </div>
+
+		
+		<ul class="navbar-bar ml-auto">
+			<form class="form-inline my-2 my-lg-0">
+				<input type="button" class="btn btn-danger" value="Cerrar Sesion" id="close">
+			</form>
+		</ul>
+	</nav>
+	
+	
+    <div class="container p-4">
+		<div class="row">
+			
+			<div class="col-md-5">
+				<div class="card">
+					<div class="card-body">				
+						<img class="card-img-top" src="img/noImage.png">
+
+						<input type='button' id='disponible' style="visibility: hidden">
+						<form enctype="multipart/form-data" class="w-75 my-2" id="form-edit-image" method="POST">
+							<label>Cambiar Foto</label>
+							<input class="btn btn-primary" type="file" name="edit-image" id="edit-image">
+						</form>
+
+						<form id="send-edit">
+						<table class="table-stripped table">
+							<tr>
+								<td class="table-dark">Marca</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">Modelo</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">Precio</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">Almacenamiento</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">RAM</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">SO</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">Cámara</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">Procesador</td>
+								<td class="form-edit"></td>
+							</tr>
+							<tr>
+								<td class="table-dark">ID</td>
+								<td class="form-edit" id="id"></td>
+							</tr>
+						</table>
+						</form>
+
+
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-7">
+		
+				<div class="d-flex justify-content-start p-2">
+					<input type="search" id="search" class="form-control w-50" placeholder="Search Task">
+					<button type="submit" class="btn btn-success">Search</button>
+				</div>
+				
+				<div class="card my-4" id="task-result">
+					<div class="card-body">
+						<ul id="container">
+							
+						</ul>
+					</div>
+				</div>
+
+				<div class="row row-fetch">
+					<div class="fetch col-12">
+						<table class="table table-bordered table-sm">
+							<thead>
+								<tr>
+									<td>Marca</td>
+									<td>Modelo</td>
+									<td>Precio</td>
+								</tr>
+							</thead>
+							<tbody id="devices">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				
+			</div>
+		</div>
+		
+	</div>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/devices/user.js"></script>
+</body>
+</html>

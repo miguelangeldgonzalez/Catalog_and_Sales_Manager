@@ -5,7 +5,7 @@ $(document).ready(function() {
 
 	$.get(dir + "session_active.php", function(response){
 		if(response != 0){
-			window.location = "home.html";
+			window.location = "devices.html";
 		}
 	});
 
@@ -16,11 +16,10 @@ $(document).ready(function() {
 		}
 
 		$.post(dir + "logIn.php", logInData, function(response){
-			console.log(response);
 			if(response == "1"){
-				window.location = "home.html";
+				window.location = "devices.html";
 			}else{
-				alert("Usuario o contraseña incorrecto.")
+				alert("Usuario o contraseña incorrecto.");
 			}
 		});
 		e.preventDefault();
