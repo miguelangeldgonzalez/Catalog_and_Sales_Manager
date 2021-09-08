@@ -1,125 +1,166 @@
+import { s, get, post, postForm } from "./../app.js";
+
 var html;
-$.ajax({
-	url: "js/devices/html.json",
-	async: false,
-	type: "GET",
-	success: function(response){
-		html = JSON.parse(response);
-	}
-})
+const DIR = "php/devices/";
 
-$(".fetch").attr("class", "col-6 fetch p-0");
-$(".fetch").after(html.tableControl);
+//Cancelar Edicion
+function cancelEdit() {
+	s(".form-edit").innerHTML = "";
+	s(".edit-control").innerHTML = "";
+	s(".card-img-top").src = "img/noImage.png";
+	s("#form-edit-image").style.display = "none";
 
-$.get("panels/add/add.html", function(response){
-    $(".row-fetch").after(response);
-});
-
-//Cargar controles de la lista
-function showControlDevices(){
-	cancelEdit();
-    $.post(dir + "device-list.php", {admin : true}, function(response){
-        let devices = JSON.parse(response);
-        let template = "";
-        
-        devices.forEach(device => {
-            template += "<tr>";
-
-            if(device.disponible == "1"){
-                template += `<td><img src="img/icons/check.png" height="16px" width="16px"></td>`;
-				$("a[deviceId='"+device.id+"'][class='device-item']").attr("d", "1");
-            }else{
-                template += `<td><img src="img/icons/x.png" height="16px" width="16px"></td>`;
-				$("a[deviceId='"+device.id+"'][class='device-item']").attr("d", "0");
-            }
-
-            template += `<td><a href="#" class="delete" deviceId="${device.id}"><img height="16px" width="16px" src="img/icons/delete.png"></a></td><td><a href="#" class="edit" deviceId="${device.id}"><img height="16px" width="16px" src="img/icons/edit.png"></a></td></tr> `;
-        });
-
-        $('#controls').html(template);
-        
-    });
+	get(DIR + "delete-edit-image.php");
 }
-$(document).ready(function(){
-	showControlDevices();
-})
 
 //Cargar control de la consulta
-function showControlQuery(d){
-	cancelEdit();
-	if(d == 1){
-		$("#disponible").attr("class", "btn btn-success");
-		$("#disponible").attr("value", "Disponible");
-		$("#disponible").attr("d", "true");
-	}else{
-		$("#disponible").attr("class", "btn btn-warning");
-		$("#disponible").attr("value", "No Disponible");
-		$("#disponible").attr("d", "false");
-	}
-	$("#disponible").css("visibility", "visible");
+function showControlQuery(d) {
+	let b = s("#disponible");
+	
+	if (d) {
+		b.value = "Disponible";
+		b.className = "btn my-2 btn-success";
+		b.onmouseover = function(){ b.value = "Marcar como no disponible"; }
+		b.onmouseout = function(){ b.value = "Disponible"; }
+	} else {
+		b.value = "No Disponible";
+		b.className = "btn my-2 btn-warning";
+		b.onmouseover = function(){ b.value = "Marcar como disponible"; }
+		b.onmouseout = function(){ b.value = "No Disponible"; }
+	}	
+
+	b.style.display = "block";
 }
 
-$(document).on('click', '.device-item', function(){
-	let d = $(this).attr('d');
-	showControlQuery(d);
-});
+//Elminar Dispositivo
+function deleteDevice(id){
+	if (confirm("Deseas eliminarlo?")) {
+		post(DIR + 'device-delete.php', { id }, () => {
+			s("#devices").removeChild(s(`tr[deviceid='${id}']`));
+		});
+	}
+}
 
-//Manejo de disponibilidad
-$("#disponible").on("click", function(){
-	let data = {
-		d: 0,
-		id: $("#id").html()
-	}
+//Cargar Eventos de los botones
+function loadEvents() {
+	s("#disponible, .availibility").forEach(b => {
+		b.addEventListener("click", () => {
+			let data = {};
 
-	if($("#disponible").attr("d") == "false"){
-		data.d = 1;
-	}
-	
-	$.post(dir + "disponibilidad.php", data, function(){
-		cargarConsulta(data.id);
-		fetchDevices();
-        showControlDevices();
-		showControlQuery(data.d);
-	})
-});
+			if(b.className == "availibility"){
+				data.id = b.parentNode.parentNode.getAttribute("deviceid");
+				data.d = b.parentNode.parentNode.getAttribute("d");
+			}else{
+				data.id = s("#id").innerHTML;
+				data.d = s(`tr[deviceid='${data.id}']`).getAttribute("d");
+			}
 
-$("#disponible").mouseenter(function(){
-	let val = $("#disponible").attr("d");
-	if(val == "true"){
-		$("#disponible").attr("value", "Marcar Como No Disponible");
-	}else{
-		$("#disponible").attr("value", "Marcar Como Disponible");
-	}
-});
-	
-$("#disponible").mouseout(function(){
-	let val = $("#disponible").attr("d");
-	if(val == "true"){
-		$("#disponible").attr("value", "Disponible");
-	}else{
-		$("#disponible").attr("value", "No Disponible");
-	}
+			post(DIR + "disponibilidad.php", data, r => {
+				if(data.d == "true"){
+					s(`tr[deviceid='${data.id}']`).setAttribute("d", "false");
+					s(`tr[deviceid='${data.id}'] .availibility`).src = "img/icons/x.png";
+					data.d = false;
+				}else{
+					s(`tr[deviceid='${data.id}']`).setAttribute("d", "true");
+					s(`tr[deviceid='${data.id}'] .availibility`).src = "img/icons/check.png";
+					data.d = true;
+				}
+
+				if(b.id == "disponible"){
+					showControlQuery(data.d);
+				}
+			});
+		});
+	});
+
+	s(".delete").forEach(b => {
+		b.addEventListener("click", () => {
+			deleteDevice(b.parentNode.parentNode.getAttribute("deviceid"));
+		})
+	});
+}
+
+//Cargar controles de la lista
+function showControlDevices() {
+	cancelEdit();
+
+	let button = document.createElement("input");
+	button.style.display = "none";
+	button.type = "button";
+	button.id = "disponible";
+
+	s(".card-body")[0].insertBefore(button, s("#send-edit"));
+
+	s(".fetch thead tr").innerHTML += html.tableControl;
+
+	post(DIR + "device-list.php", { admin: true }, devices => {
+
+		devices.forEach(device => {
+			for (let i = 0; i < 3; i++) {
+				s(`tr[deviceid='${device.id}']`).appendChild(document.createElement('td'));
+			}
+
+			let td = s(`tr[deviceid='${device.id}'] td`);
+			let elements = ["availibility", "delete", "edit"];
+
+			for (let i = 0; i < 3; i++) {
+				button = document.createElement("input");
+				button.width = "16";
+				button.height = "16";
+				button.type = "image";
+				button.className = elements[i];
+
+				if (i == 0) {
+					if (device.disponible == "1") {
+						button.src = "img/icons/check.png";
+						s(`tr[deviceid='${device.id}']`).setAttribute("d", true);
+					} else {
+						button.src = "img/icons/x.png";
+						s(`tr[deviceid='${device.id}']`).setAttribute("d", false);
+					}
+				} else {
+					button.src = "img/icons/" + elements[i] + ".png";
+				}
+
+				td[3 + i].appendChild(button);
+			}
+		});
+
+		loadEvents();
+	});
+}
+
+//Añadir el control de la tabla y el panel de añadir dispositivo
+get("js/devices/html.json", r => {
+	html = r;
+	showControlDevices();
+
+	get("panels/add/add.html", (e) => {
+		s(".col-md-7 div")[3].innerHTML = e;
+	});
+}, true);
+
+//Cargar Control de la consulta
+s(".device-item").forEach(b => {
+	b.addEventListener("click", () => {
+		let d = b.parentNode.parentNode.getAttribute("d");
+		showControlQuery(d == "true" ? true : false);
+	});
 });
 
 //Eliminar
-$(document).on('click','.delete', function(){
-    if(confirm("Deseas eliminarlo?")){
-        let id = $(this).attr('deviceId');
-        $.post(dir + 'device-delete.php', {id}, function(response){
-            showControlDevices();
-            fetchDevices();
-        });
-    }
+$(document).on('click', '.delete', function () {
+	
 });
 
 //Cargar el Formulario de Edición
-$(document).on('click','.edit', function(){
+$(document).on('click', '.edit', function () {
 	$("#disponible").css("visibility", "hidden");
 	$("#form-edit-image").show();
 
-    $(".form-edit").html("<input class='input-group-text w-75 form-input-edit' type='text'>");
+	$(".form-edit").html("<input class='input-group-text w-75 form-input-edit' type='text'>");
 
-	for(i = 2; i < 5; i++){
+	for (i = 2; i < 5; i++) {
 		$(".form-edit")[i].innerHTML = "<input class='input-group-text w-75 form-input-edit' type='number'>";
 	}
 
@@ -128,57 +169,57 @@ $(document).on('click','.edit', function(){
 	$(".form-edit")[7].innerHTML = html.formEditProcesador;
 
 	let id = $(this).attr('deviceId');
-		
-	$.post(dir + 'device-single.php', {id}, function(response){
+
+	$.post(DIR + 'device-single.php', { id }, function (response) {
 		let device = JSON.parse(response)[0];
 		let keys = Object.keys(device);
-        
+
 		let camara = JSON.parse(device.camara);
 		$("input[name='camaraFrontal']").val(camara.front);
 		$("input[name='camaraTrasera']").val(camara.back);
-        
+
 		let procesador = JSON.parse(device.procesador);
 		$("input[name='procesadorNombre']").val(procesador.name);
 		$("input[name='procesadorGHZ']").val(procesador.GHZ);
-			
+
 		let inputs = $(".form-input-edit");
 
 
-		for(let i = 0; i < 6; i++){
-			inputs[i].value = device[keys[i]]; 
-            inputs[i].name = keys[i];
+		for (let i = 0; i < 6; i++) {
+			inputs[i].value = device[keys[i]];
+			inputs[i].name = keys[i];
 		}
-		
+
 		inputs[10].name = "id";
 		inputs[10].value = device.id;
 		inputs[10].setAttribute("readonly", true);
 
-		if(device.foto == undefined){
+		if (device.foto == undefined) {
 			$(".card-img-top").attr("src", "img/noImage.png");
-		}else{
+		} else {
 			$(".card-img-top").attr("src", "img/phones/" + device.id + device.foto);
 		}
 		let buttons = html.editControl;
-	
+
 		$("#send-edit").append(buttons);
 	});
 });
 
 //Cargar Edición de la Imagen
-$("#edit-image").on("change", function(){
+$("#edit-image").on("change", function () {
 	var foto = new FormData($("#form-edit-image")[0]);
 
 	$.ajax({
 		type: "POST",
-		url: dir + "device-edit-image.php",
+		url: DIR + "device-edit-image.php",
 		data: foto,
-		contentType: false, 
+		contentType: false,
 		processData: false,
-		beforeSend: function(){
+		beforeSend: function () {
 
 		},
-		success: function(response){
-			switch(response){
+		success: function (response) {
+			switch (response) {
 				case "1":
 					alert("Formato de imagen no admitido");
 					$("#edit-image").val("");
@@ -189,24 +230,24 @@ $("#edit-image").on("change", function(){
 					break;
 				case ".jpg":
 				case ".png":
-					$(".card-img-top").attr("src", "img/tmpImage" + response);		
+					$(".card-img-top").attr("src", "img/tmpImage" + response);
 			}
 		}
 	})
 });
 
 //Enviar Edición
-$("#send-edit").submit(function(e){
+$("#send-edit").submit(function (e) {
 	e.preventDefault();
 
 	$.ajax({
-		url: dir + "device-edit.php",
+		url: DIR + "device-edit.php",
 		data: new FormData($("#send-edit")[0]),
 		type: "POST",
 		processData: false,
 		contentType: false,
-		success: function(response){
-			if(response == "1"){
+		success: function (response) {
+			if (response == "1") {
 				cancelEdit();
 				fetchDevices();
 				showControlDevices();
@@ -215,14 +256,3 @@ $("#send-edit").submit(function(e){
 		}
 	})
 });
-
-//Cancelar Edicion
-function cancelEdit(){
-	$("#id").html("");
-	$(".form-edit").html("");
-	$(".edit-control").html("");
-	$("#form-edit-image").hide();
-	$(".card-img-top").attr("src", "img/noImage.png");
-
-	$.get(dir + "delete-edit-image.php", function(){});
-}

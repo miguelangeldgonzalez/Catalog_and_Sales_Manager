@@ -1,131 +1,128 @@
-let dir = "php/home/";
+import {s, get, post} from "./../app.js";
+
+const DIR = "php/devices/";
 let admin = false;
 
-$("#form-edit-image").hide();
-
+//Mostrar Dispositivos
 function fetchDevices(){
-	$(".card-img-top").attr("src", "img/noImage.png");
+	s(".card-img-top").src = "img/noImage.png";
 
-	$.post(dir + "device-list.php", {admin}, function(response){
-		let devices = JSON.parse(response);
+	post(DIR + "device-list.php", {admin}, function(devices){
 		let template = "";
 
 		devices.forEach(device => {
 			template += `
-					<tr> 
-						<td class="device">${device.marca}</td> 
-						<td><a deviceId="${device.id}" class="device-item" href="#">${device.modelo}</a></td> 
+					<tr deviceId="${device.id}"> 
+						<td>${device.marca}</td> 
+						<td><a class="device-item" href="#disponible">${device.modelo}</a></td>
 						<td>${device.precio}</td>
 					</tr>`;
 			});
-		$('#devices').html(template);
+		s('#devices').innerHTML = template;
+
+		s(".device-item").forEach(b =>{
+			b.addEventListener("click", () =>{
+				cargarConsulta(b.parentNode.parentNode.getAttribute("deviceid"));
+			});
+		});
 	});
 }
-
-//Carga del usuario
-$.ajax({
-	url: dir + "user.php",
-	type: "GET",
-	asyn: false,
-	success: function(response){
-		if(response == ""){
-			window.location = "index.html";
-		}
-		
-		let data = JSON.parse(response)[0];
-		$("#title").html(data.nombres);
-		
-		let add = "";
-		let nav = $("#nav").html();
-		
-		if(data.cargo == "Administracion" || data.cargo == "Gerencia" || data.cargo == "Control"){
-			$("script[src = 'js/devices/user.js']").after("<script type='text/javascript' src='js/devices/root.js'></script>");
-			
-			admin = true;
-			add = nav + "<li class='nav-item'><a class='nav-link' href='panels/employees/employees.html'>Empleados</a></li>";
-
-		}else{
-			$("#add").html("");
-			add = nav;
-		}
-		$("#nav").html(add);
-
-		fetchDevices();
-	}
-});
 
 //cargar la consulta
 function cargarConsulta(id){
-		$.post(dir + "device-single.php", {id}, function(response){
-			let device = JSON.parse(response)[0];
-			let keys = Object.keys(device);
-			let inputs = $(".form-edit");
+	post(DIR + "device-single.php", {id}, function(device){
+		let keys = Object.keys(device);
+		let inputs = s(".form-edit");
 
-			for(let i = 0; i < 6; i++){
-				inputs[i].innerHTML = device[keys[i]];
-			}
-			$("#id").html(device.id);
+		for(let i = 0; i < 6; i++){
+			inputs[i].innerHTML = device[keys[i]];
+		}
+		s("#id").innerHTML = device.id;
 
-			let cam = JSON.parse(device.camara);
-			let pros = JSON.parse(device.procesador);
+		let cam = JSON.parse(device.camara);
+		let pros = JSON.parse(device.procesador);
 
-			inputs[6].innerHTML = "Frontal: " + cam.front + "MPX || Trasera: " + cam.back + "MPX";
-			inputs[7].innerHTML = "Nombre: " + pros.name + " || Capacidad: " + pros.GHZ + " GHZ";
+		inputs[6].innerHTML = "Frontal: " + cam.front + "MPX || Trasera: " + cam.back + "MPX";
+		inputs[7].innerHTML = "Nombre: " + pros.name + " || Capacidad: " + pros.GHZ + " GHZ";
 
-			if(device.foto == undefined){
-				$(".card-img-top").attr("src", "img/noImage.png");
-			}else{
-				$(".card-img-top").attr("src", "img/phones/" + device.id + device.foto);
-				console.log(device.foto);
-			}
-		});
+		if(device.foto == undefined){
+			s(".card-img-top").src = "img/noImage.png";
+		}else{
+			s(".card-img-top").src = "img/phones/" + device.id + device.foto;
+		}
+	});
 }
 
-$(document).on('click', '.device-item', function(){
-	let id = $(this).attr('deviceId');
-	cargarConsulta(id);
+//Cerrar Sesion
+function closeSession(){
+	get("php/close.php", r => {
+		window.location = "index.html";
+	});
+}
+
+s("#close").addEventListener("click", () => {
+	closeSession();
 });
 
+// Carga del usuario
+get(DIR + "user.php", response => {
+	if(response == ""){
+		window.location = "index.html";
+	}
+	
+	let data = response[0];
+	s("#title").innerHTML = data.nombres;
+	
+	let add = "";
+	let nav = s("#nav").innerHTML;
+
+	
+	if(data.cargo == "Administracion" || data.cargo == "Gerencia" || data.cargo == "Control"){
+		admin = true;
+		fetchDevices();
+
+		let script = document.createElement("script");
+		script.setAttribute("type", "module");
+		script.src = 'js/devices/root.js';
+		s("body").appendChild(script);
+		
+		add = nav + "<li class='nav-item'><a class='nav-link' href='panels/employees/employees.html'>Empleados</a></li>";
+
+	}else{
+		s("#add").innerHTML = "";
+		fetchDevices();
+		loadEvent();
+		add = nav;
+	}
+
+	s("#nav").innerHTML = add;
+}, true);
+
 //Busqueda
-$(document).ready(function(){
-	$('#task-result').hide();
+document.addEventListener("DOMContentLoaded", function(){
+	
+	s('#search').addEventListener("keyup", () => {
+		let search = s('#search');
+		
+		if(search.value){
+			search = search.value;
 
-	$('#search').keyup(function(e){
-		e.preventDefault();
-		if($('#search').val()){
-			let search = $('#search').val();
-			$.ajax({
-				url: dir + 'device-search.php',
-				type: 'POST',
-				data: {search: search},
-				success: function(response){
-					console.log(response);
-
-					let tasks = JSON.parse(response);
+			post(DIR + 'device-search.php', {search}, devices => {
 					let template = '';
 
-					tasks.forEach(device =>{
+					devices.forEach(device =>{
 						template += `<li><a deviceId="${device.id}" class="device-item" href="#">${device.modelo}</a></li>`;
 					});
 
-					if(tasks == ''){
-						$('#container').html(`No results for the search.`);
-						console.log("cumple");
+					if(devices == ''){
+						s('#container').innerHTML = `No results for the search.`;
 					}else{
-						$("#container").html(template);
+						s("#container").innerHTML = template;
 					}
-				$('#task-result').show();
-				}
+				s('#search-result').style.display = "block";
 			});
 		}else{
-			$('#task-result').hide();
+			s('#search-result').style.display = "none";
 		}
 	});
-});
-
-//Cerrar Sesion
-$("#close").on("click", function(){
-	$.get("php/close.php", function(response){
-		window.location = "index.html";
-	})
 });

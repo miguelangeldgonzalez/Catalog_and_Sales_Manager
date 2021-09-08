@@ -1,9 +1,11 @@
 {
-    "tableControl" : "<div class='col-6 p-0'><table class='table table-bordered table-sm'><thead><tr><td class='table-control'>Disponible</td><td class='table-control'>Eliminar</td><td class='table-control'>Editar</td></tr></thead><tbody id='controls'></tbody></table></div>",
+    "tableControl" : "<td>Disponible</td><td>Eliminar</td><td>Editar</td>",
 
     "editControl" : "<div class='edit-control'><input class='btn btn-danger' type='button' value='Cancelar' onclick='cancelEdit()'><input class='btn btn-success' type='submit' value='Enviar'></div>",
 
     "formEditCamara" : "<div class='input-group d-inline'><input type='number' step='.01' placeholder='Frontal' class='w-75 form-control form-input-edit' name='camaraFrontal'><input type='number' step='.01' placeholder='Trasera' class='w-75 form-control form-input-edit' name='camaraTrasera'></div>",
     
-    "formEditProcesador" : "<div class='input-group d-inline'><input type='text' class='w-75 form-control form-input-edit' placeholder='Nombre' name='procesadorNombre'><input type='number' placeholder='Capacidad' step='.01' class='w-75 form-control form-input-edit' name='procesadorGHZ'></div>"
+    "formEditProcesador" : "<div class='input-group d-inline'><input type='text' class='w-75 form-control form-input-edit' placeholder='Nombre' name='procesadorNombre'><input type='number' placeholder='Capacidad' step='.01' class='w-75 form-control form-input-edit' name='procesadorGHZ'></div>",
+
+    "deleteEditTable" : "<td><a href='#' class='delete'><img height='16px' width='16px' src='img/icons/delete.png'></a></td><td><a href='#' class='edit'><img height='16px' width='16px' src='img/icons/edit.png'></a></td>"
 }

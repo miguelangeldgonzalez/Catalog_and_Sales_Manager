@@ -19,7 +19,7 @@ foreach($formats as $f){
 		$json[0]['foto'] = $f;
 	}
 }
-$jsonstring = json_encode($json);
+$jsonstring = json_encode($json[0]);
 
 echo $jsonstring;
 
