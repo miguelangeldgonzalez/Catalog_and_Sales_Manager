@@ -3,7 +3,8 @@
 include '../db.php';
 
 if($_FILES['foto']['size'] > 3000000000){
-    echo "1";
+	$json[] =  array("code" => 1);
+    echo json_encode($json[0]);
 }elseif($_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png" || $_FILES['foto']['type'] == ""){
 	if(isset($_POST['modelo'])){
 		
@@ -16,7 +17,8 @@ if($_FILES['foto']['size'] > 3000000000){
 		$_POST['id'] = $_POST['modelo']."-".$_POST['almacenamiento']."-".$_POST['precio'];
 		$_POST['disponible'] = 1;
 		
-		if($_FILES['foto']['type'] == ""){
+		
+		if($_FILES['foto']['type'] !== ""){
 			$format = substr($_FILES['foto']['type'], 6);
 			move_uploaded_file($_FILES['foto']['tmp_name'], '../../img/phones/'.$_POST['id'].".".$format);
 		}
@@ -24,11 +26,19 @@ if($_FILES['foto']['size'] > 3000000000){
 		$result = insert("equipos");
 		
 		if($result){
-			echo "3";
+			$json[] = array(
+				"id" => $_POST['id'],
+				"marca" => $_POST['marca'],
+				"modelo" => $_POST['modelo'],
+				"precio" => $_POST['precio'],
+				"code" => 3
+			);
+			echo json_encode($json[0]);
 		}
 	}
 }else{
-    echo "2";
+	$json[] =  array("code" => 2);
+    echo json_encode($json[0]);
 }
 
 

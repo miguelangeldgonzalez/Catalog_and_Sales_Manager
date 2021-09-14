@@ -1,7 +1,7 @@
-<div id="add">
+<div>
     <div class="card">
     <div class="card-body">
-        <form id="formulario" enctype="multipart/form-datas" method="POST">
+        <form id="add" enctype="multipart/form-data" method="POST">
             
             <!-- Marca, Modelo y Precio -->
             <div class="row g-3"> 
@@ -110,7 +110,7 @@
                         <div class="col-md">
                             <div class="form-floating">
                                 <label>Foto</label>
-                                <input type="file" id="charge" value="Foto" name="foto" class="form-control">
+                                <input type="file" value="Foto" name="foto" class="form-control">
                             </div>
                         </div>
 
@@ -145,7 +145,6 @@
         </div>
     </div>
 
-    <script src="js/jquery.js"></script>
-    <script src="panels/add/add.js"></script>
+    <script type="module" src="panels/add/add.js"></script>
 
 </div>

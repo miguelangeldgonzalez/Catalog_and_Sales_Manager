@@ -1,4 +1,12 @@
-$("#formulario").submit(function (e) {
+import {s, postForm} from "./../../js/app.js";
+
+s("#add").addEventListener("submit", e => {
+    e.preventDefault();
+
+    console.log("hola");
+});
+
+/*$("#formulario").submit(function (e) {
     e.preventDefault();
 
     $.ajax({
@@ -31,4 +39,4 @@ $("#formulario").submit(function (e) {
                 }
         }
     });
-});
+});*/

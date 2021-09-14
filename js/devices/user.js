@@ -29,7 +29,7 @@ function fetchDevices(){
 }
 
 //cargar la consulta
-function cargarConsulta(id){
+export function cargarConsulta(id){
 	post(DIR + "device-single.php", {id}, function(device){
 		let keys = Object.keys(device);
 		let inputs = s(".form-edit");
@@ -91,7 +91,6 @@ get(DIR + "user.php", response => {
 	}else{
 		s("#add").innerHTML = "";
 		fetchDevices();
-		loadEvent();
 		add = nav;
 	}
 

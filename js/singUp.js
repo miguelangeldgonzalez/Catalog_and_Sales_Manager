@@ -121,7 +121,7 @@ function confirm(){
 		$.post(dir + "sendForm.php", data, function(response){
 			console.log(response);
 			if(response == "true"){
-				window.location = "home.html";
+				window.location = "devices.html";
 			}
 		});
 	}

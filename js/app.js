@@ -3,7 +3,8 @@ export function get(url, callBack = () => {}, json = false){
         .then(r => json ? r.json() : r.text())
         .then(r => {callBack(r)});
 }
-export function postForm(url, data, callBack, json = true){
+export function postForm(url, form, callBack = () => {}, json = false){
+    let data = new FormData(form);
 	fetch(url, {method : "POST", body: data})
         .then(r => json ? r.json() : r.text())
         .then(r => {callBack(r)});

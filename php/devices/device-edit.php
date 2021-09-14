@@ -12,6 +12,7 @@ $procesador = "{\"name\":\"".$_POST['procesadorNombre']."\",\"GHZ\":\"".$_POST['
 $SO = $_POST['SO'];
 $id = $_POST['id'];
 $new_id = $modelo."-".$almacenamiento."-".$precio;
+
 $foto = false;
 
 foreach($formats as $f){
