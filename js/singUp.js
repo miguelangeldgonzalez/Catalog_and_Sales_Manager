@@ -1,44 +1,40 @@
-var dir = "php/singUp/";
-var messages = {};
+import {s, postForm} from "./app.js";
 
-function validations(data){
-	let valid = false;
-	
+const DIR = "php/singUp/";
+
+async function validations(data){
 	let count = 0;
-	for(var propiedad  in data){
-		if(data[propiedad] == ""){
-			$("#" + propiedad).attr("class", "form-control is-invalid");
-			//count--;
+
+	//Verificar que todos los campos esten completos
+	for(let key of data.keys()){
+		if(s(`input[name='${key}']`).value == ""){
+			s(`input[name='${key}']`).className = "form-control is-invalid";
 		}else{
-			$("#" + propiedad).attr("class", "form-control is-valid");
-			//count++;
+			s(`input[name='${key}']`).className = "form-control is-valid";
 		}
 	}
 
-	$.ajax({
-		url: dir + "user.php",
-		async: false,
-		method: "POST",
-		data: data,
-		success: function(response){
-			if(!response){
-				$("#username").attr("class", "form-control is-valid");
+	//Verificar el nombre de usuario
+	await fetch(DIR + "user.php", {method: 'POST', body: data})
+		.then(r => r.text())
+		.then(response => {
+			if(response == ""){
+				s(`input[name='username']`).className =  "form-control is-valid";
 			}else{
-				count--;
-				$("#username").attr("class", "form-control is-invalid");
-
+				count--;	
+				s(`input[name='username']`).className = "form-control is-invalid";
 			}
-		}
-	});
-
+		});
+	
 	let a = 0;
-	for(let l of data.correo){
+
+	for(let l of data.get("correo")){
 		//Busca la cantidad de @
 		if(l == "@"){
 			a++;
 			continue;
 		}
-		//Verifica que solo halla un punt despues del arroba
+		//Verifica que solo halla un punto despues del arroba
 		if(a > 0){
 			if(l == "."){
 				a++;
@@ -47,25 +43,26 @@ function validations(data){
 	}
 	
 	if(a == 2){
-		$("#correo").attr("class", "form-control is-valid");
+		s("input[name='correo']").className = "form-control is-valid";
 		count++;
 	}else{
-		$("#correo").attr("class", "form-control is-invalid");
+		s("input[name='correo']").className = "form-control is-invalid";
 		count--;
 	}
 	
 	let p = 0;
-	
-	if(data.password.length >= 5){
+	let password = data.get("password");
+
+	if(password.length >= 5){
 		p++;
-		for(let l of data.password){
+		for(let l of password){
 			let nums = /^[0-9]+$/;
 			if(l.match(nums)){
 				p++;
 				break;
 			}
 		}
-		for(let l of data.password){
+		for(let l of password){
 			let letters = /^[A-Z]+$/i;
 			
 			if(l.match(letters)){
@@ -76,21 +73,19 @@ function validations(data){
 	}
 	
 	if(p > 2){
-		$("#password").attr("class", "form-control is-valid");
+		s("input[name='password']").className = "form-control is-valid";
 		count++;
 	}else{
-		$("#password").attr("class", "form-control is-invalid");
+		s("input[name='password']").className = "form-control is-invalid";
 		count--;
 	}
 	
-	let confirmPassword = $("#confirmPassword").val();
-	
-	if(confirmPassword == data.password){
+	if(s("#confirmPassword").value == password){
 		count ++;
-		$("#confirmPassword").attr("class", "form-control is-valid");
+		s("#confirmPassword").className = "form-control is-valid";
 	}else{
 		count--;
-		$("#confirmPassword").attr("class", "form-control is-invalid");
+		s("#confirmPassword").className = "form-control is-invalid";
 	}
 
 
@@ -101,28 +96,17 @@ function validations(data){
 	}
 }
 
-function confirm(){
-	var data = {
-		username : $("#username").val(),
-		nombres : $("#nombres").val(),
-		apellidos : $("#apellidos").val(),
-		celular : $("#celular").val(),
-		password: $("#password").val(),
-		correo : $("#correo").val()
-	}
+s("#formulario").addEventListener("submit", e => {
+	e.preventDefault();
+	var data = new FormData(s("#formulario"));
 
-	if(data.foto == ""){
-		data.foto = "noImage.png";
-	}
-	$("#e").on("click", function(e){e.preventDefault()});
-	let valid = validations(data);
-	
-	if(valid){
-		$.post(dir + "sendForm.php", data, function(response){
-			console.log(response);
-			if(response == "true"){
-				window.location = "devices.html";
-			}
-		});
-	}
-}
+	validations(data).then(valid => {
+		if(valid){
+			postForm(DIR + "sendForm.php", s("#formulario"), response => {
+				if(response == "true"){
+					window.location = "devices.html";
+				}
+			});
+		}
+	})
+});

@@ -4,7 +4,6 @@
 	<title>Catálogo</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<meta charset="utf-8">
-	<script type="text/javascript" src="js/jquery.js"></script>
 </head>
 <body>
 
@@ -12,33 +11,29 @@
 	<div class="row">
 
 		<div class="col-md-4">
-			<div class="card"  id="first">
-				<div class="card-body btn-danger text-center my-5 p-3"> 
-					<p id="textMessage"></p> 
-				</div>
-			</div>
 		</div>
-		<script type="text/javascript">$("#first").hide();</script>
+
 		<div class="col-md-4">
 			<div class="card">
 				<div class="card-body">
+
 					<form id="form">
 						<div class="form-group">
-							<input type="text" id="username" placeholder="Nombre de Usuario" class="form-control required" required>
+							<input type="text" name="username" placeholder="Nombre de Usuario" class="form-control required" required>
 						</div>
 						<div class="form-group">
-							<input type="password" id="password" placeholder="Contraseña" class="form-control required" required>
+							<input type="password" name="password" placeholder="Contraseña" class="form-control required" required>
 						</div>
-						<button type="submit" id="submit" class="btn btn-dark btn-block text-center">Entrar</button>
+						<input type="submit" value="Entrar" class="btn btn-dark btn-block text-center">
 						<button onclick="window.location = 'singUp.html'" class="btn btn-dark btn-block text-center">Registrarse</button>
 					</form>
+
 				</div>
 			</div>
 		</div>
 </div>
 
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+<script type="module" src="js/index.js"></script>
 
 </body>
 </html>

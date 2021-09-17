@@ -1,73 +1,52 @@
+import {s, get, post} from "./../../js/app.js";
+
 let admin = false;
 let edit = false;
 
-$("table-control").hide();
+s(".table-control").forEach(td => {
+    td.style.display = "none";
+});
 
-function fetchEmployees(){
-    edit = false;
-    $.get("employees.php", function(response){
-        let template = "";
-        let employees = JSON.parse(response);
-
-        employees.forEach(employee => {
-            template += `
-            <tr>
-                    <td>${employee.nombres}</td>
-                    <td>${employee.apellidos}</td>
-                    <td>${employee.celular}</td>
-                    <td>${employee.correo}</td>
-                    <td id="${employee.id}">${employee.cargo}</td>
-            `;
-            
-            if(admin){
-                template += `
-                <td><a href="#" class="edit" employeeId="${employee.id}"><img src="../../img/icons/edit.png" width="16px" height="16px"></a></td>
-                <td><a href="#" class="delete" employeeId="${employee.id}"><img src="../../img/icons/x.png" width="16px" height="16px"></a></td>
-                `;
-            }
-        });
-        $("#employees").html(template);
-    });
-}
-
-//Eliminar usuario
-$(document).on("click", ".delete", function(){
-    let id = $(this).attr("employeeId");
-
+function deleteEmployee(id){
     if(confirm("Seguro que desea eliminar el usuario del empleado?")){
-        $.post("delete-employee.php", {id}, function(response){
+        post("delete-employee.php", {id}, function(response){
             if(response == "1"){
                 fetchEmployees();
             }
         });
     }
-});
+}
 
-//editar usuario
-$(document).on("click", ".edit", function(){
+function editEmployee(id){
     edit = true;
-    let id = $(this).attr("employeeId");
 
     let template = `
-        <select class="form-control select required">
+        <select id="s${id}" class="form-control select required">
             <option>Asesor</option>
             <option>Administracion</option>
             <option>Gerente</option>
         </select>
-        <input class="btn btn-success" value="Enviar" onclick="sendEdit(${id})" type="button">
-        <input class="btn btn-danger" value="Cancelar" type="button" onclick="fetchEmployees()">
+        <input class="btn btn-success" id="sendEdit" value="Enviar" type="button">
+        <input class="btn btn-danger" id="cancelEdit" value="Cancelar" type="button">
     `;
+    s("#e" + id).innerHTML = template;
 
-    $("#" + id).html(template);
-});
+    s("#cancelEdit").addEventListener("click", () => {
+        fetchEmployees();
+    });
+
+    s("#sendEdit").addEventListener("click", () => {
+        sendEdit(id);
+    });
+}
 
 function sendEdit(id){
     let data = {
         id: id, 
-        cargo: $(".select").val()
+        cargo: s(`#s${id}`).value
     }
 
-    $.post("edit-employee.php", data, function(response){
+    post("edit-employee.php", data, function(response){
         console.log(response);
 
         if(response == "1"){
@@ -76,32 +55,77 @@ function sendEdit(id){
     });
 }
 
+function loadEvents(){
+    s(".delete").forEach(button => {
+        button.addEventListener("click", () => {
+            deleteEmployee(button.getAttribute("employeeId"));
+        })
+    });
+
+    s(".edit").forEach(button => {
+        button.addEventListener("click", () => {
+            edit ? alert("Complete la edicion o cancelela") : editEmployee(button.getAttribute("employeeId"));
+        })
+    });
+}
+
+function fetchEmployees(){
+    edit = false;
+    get("employees.php", employees => {
+        let template = "";
+
+        employees.forEach(employee => {
+            template += `
+            <tr>
+                    <td>${employee.nombres}</td>
+                    <td>${employee.apellidos}</td>
+                    <td>${employee.celular}</td>
+                    <td>${employee.correo}</td>
+                    <td id="e${employee.id}">${employee.cargo}</td>
+            `;
+            
+            if(admin){
+                template += `
+                <td><a href="#" class="edit" employeeId="${employee.id}"><img src="../../img/icons/edit.png" width="16px" height="16px"></a></td>
+                <td><a href="#" class="delete" employeeId="${employee.id}"><img src="../../img/icons/x.png" width="16px" height="16px"></a></td>
+                </tr>`;
+            }else{
+                template += "</tr>";
+            }
+        });
+        s("#employees").innerHTML = template;
+
+        loadEvents();
+    }, true);
+}
+
 //Cerrar Sesion
-$("#close").on("click", function(){
-    $.get("../../php/close.php", function(){
+s("#close").addEventListener("click", () => {
+    get("../../php/close.php", () => {
         window.location = "../../index.html";
     });
 });
 
 //Carga del usuario
-$.get("../../php/home/user.php", function(response){
+get("../../php/devices/user.php", response => {
     if(response == ""){
         window.location = "../../index.html";
     }
 
-    let data = JSON.parse(response)[0];
-    $("#title").html(data.nombres);
+    s("#title").innerHTML = response[0].nombres;
 
-    switch(data.cargo){
+    switch(response[0].cargo){
         case "Asesor":
-            window.location = "../../home.html";
+            window.location = "../../devices.html";
             break;
         case "Control":
         case "Gerencia":
-            $("table-control").hide();
-            admin = true;
+            s(".table-control").forEach(td => {
+                td.style.display = "";
+                admin = true
+            });
             break;
     }
 
     fetchEmployees();
-});
+}, true);
