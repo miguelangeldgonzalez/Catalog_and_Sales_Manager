@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/modal.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav" id="nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" aria-current="true" id="title"></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="devices.html">Dispositivos</a>
+                </li>
+            </ul>
+        </div>
+
+        <ul class="navbar-bar ml-auto">
+            <input type="button" id="close" class="btn btn-danger" value="Cerrar Sesion">
+        </ul>
+    </nav>
+
+    <!--Modal Change Password-->
+    <div class="modal-container">
+        <div id="modal-change-password" class="modal modal-close">
+            <div class="close">X</div>
+            <div class="modal-body">
+                <h2>Change Password</h2>
+                <form id="password-form">
+                    <div class="form-group">
+                        <label>Ingrese la Contraseña Actual</label>
+                        <input type="password" class="form-control my-2" name="password" placeholder="Contraseña Actual">
+                        <div class="valid-feedback">
+                            Correcto
+                        </div>
+
+                        <div class="invalid-feedback">
+                            Contraseña Incorrecta
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nueva Contraseña</label>
+                        <div>
+                            <input type="password" class="form-control my-2" name="new-password"
+                                placeholder="Nueva Contraseña">
+                            <div class="valid-feedback">
+                                Correcto
+                            </div>
+                            <div class="invalid-feedback">
+                                La contraseña debe contener:
+									<ul>
+										<li>Al menos 5 caracteres</li>
+										<li>Números</li>
+										<li>Signos especiales</li>
+									</ul>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="password" class="form-control my-2" id="confirm-password" placeholder="Confirmar Nueva Contraseña">
+
+                            <div class="valid-feedback">
+                                Correcto
+                            </div>
+                            <div class="invalid-feedback">
+                                Las contraseñas no coinciden.
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-3">
+        <div class="card">
+            <div class="card-body">
+                <form enctype="multipart/form-data" id="main-form">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <img src="img/noImageProfile.png" class="card-img-top" height="300"
+                                        style="border-radius: 100%">
+
+                                    <label>Cambiar Foto de Perfil</label>
+                                    <input type="file" name="image" class="btn btn-primary w-100">
+                                    <input type="button" id="delete-image" value="Eliminar Foto de Perfil"
+                                        class="w-100 my-2 btn btn-danger">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control my-2" name="nombres"
+                                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32"
+                                            readonly />
+                                        <input type="text" class="form-control my-2" name="apellidos"
+                                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32"
+                                            readonly />
+                                        <input type="text" name="username" class="form-control my-2" readonly />
+                                        <input type="button" value="Cambiar Contraseña" id="change-password"
+                                            class="btn btn-warning w-100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control my-2" name="cargo" readonly />
+                                        <input type="text" class="form-control my-2" name="correo" readonly />
+                                        <input type="number" class="form-control my-2" name="celular" readonly />
+
+                                        <input type="button" id="edit" value="Editar Información de Perfil"
+                                            class="w-100 btn btn-info">
+                                        <input type="submit" id="send" value="Enviar" class="w-100 btn btn-success"
+                                            style="display:none;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/profile.js"></script>
+
+</body>
+
+</html>

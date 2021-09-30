@@ -3,26 +3,29 @@
 	$link = mysqli_connect("localhost", "root", "", "acm");
 	$formats = array(".jpeg", ".png", ".jpg");
 
-	function query($query){
-		$result = mysqli_query($GLOBALS['link'], $query);
-
-		if(!$result){
-			die("The query was failed -> ". mysqli_error($GLOBALS['link']));
+	function query($table, $condition = "", $selection = "*"){
+		if($condition == ""){
+			$query = "SELECT ".$selection." FROM ".$table;
 		}else{
-			$json = array();
-			while($row = mysqli_fetch_array($result)){
-				$json[] = array(
-					"id" => $row['id'], 
-					"username" => $row['username'],
-					"nombres" => $row['nombres'],
-					"apellidos" => $row['apellidos'],
-					"celular" => $row['celular'],
-					"correo" => $row['correo'],
-					"cargo" => $row['cargo'],
-					"password" => $row['password']
-				);
+			$query = "SELECT ".$selection." FROM ".$table." WHERE ".$condition;
+		}
+	
+		$result = mysqli_query($GLOBALS['link'], $query);
+	
+		$out = [];
+	
+		while($row = mysqli_fetch_assoc($result)){
+			$values = [];
+			foreach($row as $key => $value){
+				$values[$key] = $value;
 			}
-			return $json;
+			$out[] = array($values);
+		}
+		
+		if(count($out) == 1){
+			return $out[0];
+		}else{
+			return $out;
 		}
 	}
 
@@ -30,10 +33,10 @@
 
 	function insert($tabla){
 		
-		$query = "SHOW COLUMNS FROM `equipos`";
+		$query = "SHOW COLUMNS FROM `".$tabla."`";
 		$result = mysqli_query($GLOBALS['link'], $query);
 		
-		$insert = "INSERT INTO `equipos` (";
+		$insert = "INSERT INTO `".$tabla."` (";
 		$fields = "";
 		$values = "";
 		

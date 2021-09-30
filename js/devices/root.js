@@ -198,7 +198,6 @@ function addSingle(device){
 
 function addDevice(){
 	postForm(DIR + "device-add.php", s("#add"), response => {
-
 		switch(response.code){
 			case 1:
 				alert("La imagen supera los 3MB");

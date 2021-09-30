@@ -107,7 +107,7 @@ s("#close").addEventListener("click", () => {
 });
 
 //Carga del usuario
-get("../../php/devices/user.php", response => {
+get("../../php/user.php", response => {
     if(response == ""){
         window.location = "../../index.html";
     }

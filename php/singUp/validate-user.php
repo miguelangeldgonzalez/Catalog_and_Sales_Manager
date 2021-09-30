@@ -4,9 +4,9 @@ include "../db.php";
 
 $username = $_POST['username'];
 
-$query = "SELECT * FROM usuarios WHERE username = '$username'";
+$query = "username = '$username'";
 
-$result = query($query);
+$result = query("usuarios", $query);
 $length = sizeof($result);
 
 if($length >= 1){

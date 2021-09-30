@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Catálogo</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/singUp.css">
 </head>
+
 <body>
-	
+
 	<!-- Titulo -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a href="#" class="navbar-brand"><h1>Registro de Usuario</h1></a>
+		<h1 href="#" class="navbar-brand navbar-dark">Registro de Usuario</h1>
 	</nav>
-	
-<form id="formulario" enctype="multipart/form-data">
+
 	<div class="container mt-3">
+		<form id="formulario" enctype="multipart/form-data">
 		<div class="row">
-			<div class="col-4">		
-				<div class="card">
-					<div class="card-header text-center">Datos Personales</div>
+				<div class="col-4">
+
+					<div class="card">
+						<div class="card-header text-center">Datos Personales</div>
 						<div class="card-body">
 
-						<div class="nombreDeUsuario">
-							<label>Nombre de Usuario</label>
-							<input class="form-control" name="username">
-							<div class="invalid-feedback">
-								El nombre de usuario ya existe.
+							<div class="username">
+								<label>Nombre de Usuario</label>
+								<input class="form-control" name="username">
+								<div class="invalid-feedback">
+									El nombre de usuario ya existe.
+								</div>
+								<div class="valid-feedback">
+									Correcto.
+								</div>
 							</div>
-							<div class="valid-feedback">
-								Correcto.
-							</div>
-						</div>
 
-						<div class="nombres">
-							<label>Nombres</label>
-							<input class="form-control" name="nombres">
-							<div class="invalid-feedback">
-								Ingrese sus nombres.
+							<div class="nombres">
+								<label>Nombres</label>
+								<input class="form-control" name="nombres">
+								<div class="invalid-feedback">
+									Ingrese sus nombres.
+								</div>
+								<div class="valid-feedback">
+									Correcto.
+								</div>
 							</div>
-							<div class="valid-feedback">
-								Correcto.
-							</div>
-						</div>
 
-						<div class="apellidos">
+							<div class="apellidos">
 								<label>Apellidos</label>
 								<input class="form-control" name="apellidos">
 								<div class="invalid-feedback">
@@ -52,70 +55,80 @@
 								<div class="valid-feedback">
 									Correcto.
 								</div>
-						</div>
+							</div>
 
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="col-4">
-				<div class="card">
-					<div class="card-header text-center">Datos De Contacto y Contraseña</div>
-					<div class="card-body">
+				<div class="col-4">
+					<div class="card">
+						<div class="card-header text-center">Datos De Contacto y Contraseña</div>
+						<div class="card-body">
 
-						<div class="numeroCelular">
-							<label>Numero Celular</label>
-							<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" maxlength="11" name="celular">
-							<div class="invalid-feedback">Ingrese un numero de cedula valido.</div>
-							<div class="valid-feedback">Correcto.</div>
-						</div>
+							<div class="numeroCelular">
+								<label>Numero Celular</label>
+								<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"
+									class="form-control" maxlength="11" name="celular">
+								<div class="invalid-feedback">Ingrese un numero de cedula valido.</div>
+								<div class="valid-feedback">Correcto.</div>
+							</div>
 
-						<div class="correoElectronico">
-							<label>Correo Electrónico</label>
-							<input class="form-control" name="correo">
-							<div class="invalid-feedback">Ingrese un correo electrónico valido, por ejemplo, nombre@direccion.com.</div>
-							<div class="valid-feedback">Correcto.</div>
-						</div>
-								
-						<div class="password">
-							<label for="password" class="form-label">Contraseña</label>
-							<input class="form-control" type="password" name='password'></input>
-							<div class="invalid-feedback">
-								La contraseña debe contener:
+							<div class="correoElectronico">
+								<label>Correo Electrónico</label>
+								<input class="form-control" name="correo">
+								<div class="invalid-feedback">Ingrese un correo electrónico valido, por ejemplo,
+									nombre@direccion.com.</div>
+								<div class="valid-feedback">Correcto.</div>
+							</div>
+
+							<div class="password">
+								<label for="password" class="form-label">Contraseña</label>
+								<input class="form-control" type="password" name='password'></input>
+								<div class="invalid-feedback">
+									La contraseña debe contener:
 									<ul>
 										<li>Al menos 5 caracteres</li>
 										<li>Números</li>
 										<li>Signos especiales</li>
 									</ul>
+								</div>
+								<div class="valid-feedback">Correcto</div>
 							</div>
-							<div class="valid-feedback">Correcto</div>
-						</div>
 
-						<div class="confirmPassword">
-							<label for="password" class="form-label">Confirmar Contraseña</label>
-							<input class="form-control" type="password" id="confirmPassword"></input>
-							<div class="invalid-feedback">Las contraseñas no coinciden.</div>
-							<div class="valid-feedback">Correcto</div>
-						</div>
+							<div class="confirmPassword">
+								<label for="password" class="form-label">Confirmar Contraseña</label>
+								<input class="form-control" type="password" id="confirmPassword"></input>
+								<div class="invalid-feedback">Las contraseñas no coinciden.</div>
+								<div class="valid-feedback">Correcto</div>
+							</div>
 
+						</div>
+					</div>
+
+					<div style="justify-content: center; display: flex;">
+						<input class="btn btn-success mt-3 px-5 py-2" style="font-size: 1.5em;" type="submit"
+							value="Enviar">
 					</div>
 				</div>
-			</div>
 
-		</div>
+				<div class="col-4">
+					<div class="card">
+						<div class="card-header">Foto de Perfil</div>
+						<div class="card-body">
+							<img src="img/noImageProfile.png" style="border-radius: 100%;" class="card-img-top">
+
+							<input type="file" name="image" class="btn btn-primary btn-block">
+							<input type="button" id="delete-image" class="btn btn-danger btn-block" value="ELiminar Foto">
+						</div>
+					</div>
+				</div>
+					
+			</div>
+		</form>
 	</div>
-	
-	<div class="container">
-		<div class="row">
-		<div class="col-4"></div>
-		<div class="col-4" style="justify-content: center; display: flex;">
-			<input class="btn btn-success mt-3 px-5 py-2" style="font-size: 1.5em;" type="submit" value="Enviar">
-		</div>
-	</div>
-	</div>
-</form>	
-	
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
 	<script type="module" src="js/singUp.js"></script>
 </body>
+
 </html>

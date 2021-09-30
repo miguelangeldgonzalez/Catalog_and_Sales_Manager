@@ -65,7 +65,7 @@ s("#close").addEventListener("click", () => {
 });
 
 // Carga del usuario
-get(DIR + "user.php", response => {
+get("php/user.php", response => {
 	if(response == ""){
 		window.location = "index.html";
 	}

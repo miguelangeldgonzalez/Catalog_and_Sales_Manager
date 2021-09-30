@@ -1,24 +1,25 @@
-import {s, postForm} from "./app.js";
+import {s, postForm, get} from "./app.js";
 
 const DIR = "php/singUp/";
 
-async function validations(data){
+export async function validations(data){
 	let count = 0;
 
 	//Verificar que todos los campos esten completos
 	for(let key of data.keys()){
-		if(s(`input[name='${key}']`).value == ""){
-			s(`input[name='${key}']`).className = "form-control is-invalid";
+		let input = s(`input[name='${key}']`);
+		if(input.value == "" && input.type != "file"){
+			input.className = "form-control is-invalid";
 		}else{
-			s(`input[name='${key}']`).className = "form-control is-valid";
+			input.className = "form-control is-valid";
 		}
 	}
 
 	//Verificar el nombre de usuario
-	await fetch(DIR + "user.php", {method: 'POST', body: data})
+	await fetch(DIR + "validate-user.php", {method: 'POST', body: data})
 		.then(r => r.text())
 		.then(response => {
-			if(response == ""){
+			if(response == "" && s("input[name='username']").value != ""){
 				s(`input[name='username']`).className =  "form-control is-valid";
 			}else{
 				count--;	
@@ -34,15 +35,9 @@ async function validations(data){
 			a++;
 			continue;
 		}
-		//Verifica que solo halla un punto despues del arroba
-		if(a > 0){
-			if(l == "."){
-				a++;
-			}
-		}
 	}
 	
-	if(a == 2){
+	if(a == 1){
 		s("input[name='correo']").className = "form-control is-valid";
 		count++;
 	}else{
@@ -80,7 +75,7 @@ async function validations(data){
 		count--;
 	}
 	
-	if(s("#confirmPassword").value == password){
+	if(s("#confirmPassword").value == password && password != ""){
 		count ++;
 		s("#confirmPassword").className = "form-control is-valid";
 	}else{
@@ -95,6 +90,29 @@ async function validations(data){
 		return false;
 	}
 }
+s("input[name='image']").addEventListener("change", () => {
+	postForm(DIR + "validate-image.php", s("#formulario"), response => {
+		switch(response){
+			case "jpg":
+			case "png":
+				s(".card-img-top").setAttribute("src", "img/tmpImage." + response);
+				break;
+			case "1":
+				alert("La imagen supera los 3MB");
+				break;
+			default:
+			case "2":
+				alert("La imagen tiene un formato no admitido");
+				break;
+		}
+	});
+});
+
+s("#delete-image").addEventListener("click", () =>{
+	get("php/devices/delete-edit-image.php", () => {
+		s(".card-img-top").setAttribute("src", "img/noImageProfile.png");
+	})
+});
 
 s("#formulario").addEventListener("submit", e => {
 	e.preventDefault();
@@ -102,7 +120,7 @@ s("#formulario").addEventListener("submit", e => {
 
 	validations(data).then(valid => {
 		if(valid){
-			postForm(DIR + "sendForm.php", s("#formulario"), response => {
+			postForm(DIR + "send-form.php", s("#formulario"), response => {
 				if(response == "true"){
 					window.location = "devices.html";
 				}
