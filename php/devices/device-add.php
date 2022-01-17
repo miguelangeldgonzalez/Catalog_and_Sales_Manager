@@ -23,7 +23,7 @@ if($_FILES['foto']['size'] > 3000000000){
 			move_uploaded_file($_FILES['foto']['tmp_name'], '../../img/phones/'.$_POST['id'].".".$format);
 		}
 
-		$result = insert("equipos");
+		$result = insert("devices");
 		
 		if($result){
 			$json[] = array(

@@ -3,7 +3,7 @@
 include '../db.php';
 
 $id = $_POST['id'];
-$query = "DELETE FROM equipos WHERE `id` = '$id'";
+$query = "DELETE FROM devices WHERE `id` = '$id'";
 
 $result = mysqli_query($link, $query);
 

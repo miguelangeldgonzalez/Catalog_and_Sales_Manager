@@ -4,7 +4,7 @@ include "../db.php";
 
 session_start();
 
-$query = "UPDATE `usuarios` SET `foto` = '' WHERE `username` = '".$_SESSION['username']."'";
+$query = "UPDATE `users` SET `foto` = '' WHERE `username` = '".$_SESSION['username']."'";
 mysqli_query($link, $query);
 
 $path = "../../img/profiles-photos/";

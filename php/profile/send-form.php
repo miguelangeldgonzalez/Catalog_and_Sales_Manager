@@ -2,7 +2,7 @@
 
 include '../db.php';
 
-$update = "UPDATE `usuarios` SET ";
+$update = "UPDATE `users` SET ";
 
 //Rellenar la consulta
 foreach($_POST as $key => $value){

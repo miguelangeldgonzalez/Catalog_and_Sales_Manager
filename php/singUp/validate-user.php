@@ -6,7 +6,7 @@ $username = $_POST['username'];
 
 $query = "username = '$username'";
 
-$result = query("usuarios", $query);
+$result = query("users", $query);
 $length = sizeof($result);
 
 if($length >= 1){

@@ -37,7 +37,7 @@ if($foto){
 }
 
 
-$query = "UPDATE `equipos` SET `id`='$new_id', `marca`='$marca',`modelo`='$modelo',`precio`='$precio',`RAM`='$RAM',`almacenamiento`='$almacenamiento',`camara`='$camara',`procesador`='$procesador',`SO`='$SO' WHERE `id` = '$id'";
+$query = "UPDATE `devices` SET `id`='$new_id', `marca`='$marca',`modelo`='$modelo',`precio`='$precio',`RAM`='$RAM',`almacenamiento`='$almacenamiento',`camara`='$camara',`procesador`='$procesador',`SO`='$SO' WHERE `id` = '$id'";
 
 $result = mysqli_query($link, $query);
 

@@ -20,11 +20,19 @@ function fetchDevices(){
 			});
 		s('#devices').innerHTML = template;
 
-		s(".device-item").forEach(b =>{
+		if(devices.length != 1){
+			s(".device-item").forEach(b =>{
+				b.addEventListener("click", () =>{
+					cargarConsulta(b.parentNode.parentNode.getAttribute("deviceid"));
+				});
+			});
+		}else{
+			var b = s(".device-item");
 			b.addEventListener("click", () =>{
 				cargarConsulta(b.parentNode.parentNode.getAttribute("deviceid"));
 			});
-		});
+		}
+
 	});
 }
 

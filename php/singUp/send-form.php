@@ -7,10 +7,11 @@
             $_POST['foto'] = $f;
         }
     }
+
     $_POST['cargo'] = "Asesor";
     $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
     
-    $result = insert('usuarios');
+    $result = insert('users');
 
     if($result){
         echo "true";

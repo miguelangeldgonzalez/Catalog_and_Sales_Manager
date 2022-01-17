@@ -5,9 +5,9 @@ include '../db.php';
 $admin = $_POST['admin'];
 
 if($admin == "true"){
-	$query = "SELECT * FROM equipos";
+	$query = "SELECT * FROM devices";
 }else{
-	$query = "SELECT * FROM equipos WHERE `disponible` = '1'";
+	$query = "SELECT * FROM devices WHERE `disponible` = '1'";
 }
 
 $result = mysqli_query($link, $query);

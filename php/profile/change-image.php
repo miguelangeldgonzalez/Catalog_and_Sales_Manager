@@ -18,7 +18,7 @@ if($_FILES['image']['size'] > 3000000000){
 
     move_uploaded_file($_FILES['image']['tmp_name'], $path.$_SESSION['username'].$format);
 
-    $query = "UPDATE `usuarios` SET `foto` = '".$format."' WHERE `username` = '".$_SESSION['username']."'";
+    $query = "UPDATE `users` SET `foto` = '".$format."' WHERE `username` = '".$_SESSION['username']."'";
     
     mysqli_query($link, $query);
 

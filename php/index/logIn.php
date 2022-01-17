@@ -6,7 +6,7 @@
 	$password = $_POST['password'];
 
 	$query = "username = '$username'";
-	$result = query("usuarios", $query);
+	$result = query("users", $query);
 
 	if(!empty($result)){
 		if(password_verify($password, $result[0]['password'])){
