@@ -16,6 +16,7 @@ function cancelEdit() {
 
 	get(DIR + "delete-edit-image.php");
 }
+
 function changeAvailibility(id, availibility){
 	let data = {
 		id: id,
@@ -41,7 +42,7 @@ function showControlQuery(availibility) {
 	
 	let button = s("#availibility");
 	
-	if (!availibility) {
+	if (availibility) {
 		button.value = "Disponible";
 		button.className = "btn my-2 btn-success";
 		button.onmouseover = function(){ button.value = "Marcar como no disponible"; }
@@ -102,27 +103,12 @@ function editDevice(id){
 	s(".form-edit")[7].innerHTML = html.formEditProcesador;
 
 	post(DIR + "device-single.php", {id}, device => {
-		console.log(device);
 		let keys = Object.keys(device);
-
-		let camara = JSON.parse(device.camara);
-		s("#edit input[name='camaraFrontal']").value = camara.front;
-		s("#edit input[name='camaraTrasera']").value = camara.back;
-
-		let procesador = JSON.parse(device.procesador);
-		s("#edit input[name='procesadorNombre']").value = procesador.name;
-		s("#edit input[name='procesadorGHZ']").value = procesador.GHZ;
-
 		let inputs = s(".form-input-edit");
 
 		for (let i = 0; i < 6; i++) {
 			inputs[i].value = device[keys[i]];
-			inputs[i].name = keys[i];
 		}
-
-		inputs[10].value = device.id;
-		inputs[10].setAttribute("name", "id");
-		inputs[10].setAttribute("readonly", true);
 
 		if (device.foto == undefined) {
 			s(".card-img-top").setAttribute("src", "img/noImage.png");
@@ -173,7 +159,7 @@ function addSingle(device){
 		<td><input type="image" width="16px" height="16px" src="img/icons/edit.png" class="edit" /></td>`;
 
 	s(`tr[deviceid="${device.id}"] .device-item`).addEventListener("click", () => {
-		showControlQuery(s(`tr[deviceid="${device.id}"]`).getAttribute("d") == "true" ? false : true);
+		showControlQuery(s(`tr[deviceid="${device.id}"]`).getAttribute("d") == "true" ? true : false);
 		cargarConsulta(device.id);
 	});
 
@@ -247,7 +233,7 @@ function loadEvents(one) {
 	
 		s(".device-item").forEach(button => {
 			button.addEventListener("click", () => {
-				showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
+				showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? true : false);
 				cargarConsulta(button.parentNode.parentNode.getAttribute("deviceid"));
 			});
 		});
@@ -270,7 +256,7 @@ function loadEvents(one) {
 		
 	
 		s(".device-item").addEventListener("click", () => {
-			showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
+			showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? true : false);
 			cargarConsulta(button.parentNode.parentNode.getAttribute("deviceid"));
 		});
 	}

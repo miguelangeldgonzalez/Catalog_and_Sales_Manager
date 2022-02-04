@@ -39,19 +39,13 @@ function fetchDevices(){
 //cargar la consulta
 export function cargarConsulta(id){
 	post(DIR + "device-single.php", {id}, function(device){
-		let keys = Object.keys(device);
 		let inputs = s(".form-edit");
 
-		for(let i = 0; i < 6; i++){
-			inputs[i].innerHTML = device[keys[i]];
-		}
+		inputs.forEach(input => {
+			input.value = device[input.getAttribute("name")];
+		})
+
 		s("#id").innerHTML = device.id;
-
-		let cam = JSON.parse(device.camara);
-		let pros = JSON.parse(device.procesador);
-
-		inputs[6].innerHTML = "Frontal: " + cam.front + "MPX || Trasera: " + cam.back + "MPX";
-		inputs[7].innerHTML = "Nombre: " + pros.name + " || Capacidad: " + pros.GHZ + " GHZ";
 
 		if(device.foto == undefined){
 			s(".card-img-top").src = "img/noImage.png";

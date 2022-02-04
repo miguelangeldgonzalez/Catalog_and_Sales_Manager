@@ -17,6 +17,18 @@ foreach($formats as $f){
 	}
 }
 
+$camara = json_decode($row['camara']);
+$row['camara_frontal'] = $camara->front;
+$row['camara_trasera'] = $camara->back;
+
+unset($row['camara']);
+
+$procesador = json_decode($row['procesador']);
+$row['nombre_procesador'] = $procesador->name;
+$row['capacidad_procesador'] = $procesador->GHZ;
+
+unset($row['procesador']);
+
 echo json_encode($row);
 
 ?>
