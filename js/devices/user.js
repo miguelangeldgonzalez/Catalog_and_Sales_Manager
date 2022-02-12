@@ -43,7 +43,7 @@ export function cargarConsulta(id){
 
 		inputs.forEach(input => {
 			input.value = device[input.getAttribute("name")];
-		})
+		});
 
 		s("#id").innerHTML = device.id;
 

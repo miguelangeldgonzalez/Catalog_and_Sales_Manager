@@ -95,12 +95,10 @@ function editDevice(id){
 		b.innerHTML = "<input class='input-group-text w-75 form-input-edit' type='text'>";
 	});
 
-	for(let i = 2; i < 5; i++){
-		s(".form-edit")[i].innerHTML = "<input class='input-group-text w-75 form-input-edit' type='number'>";
+	for(let i = 0; i < 5; i++){
+		console.log(s(".form-edit")[i]);
+		s(".form-edit")[i].removeAttribute("readonly");
 	}
-
-	s(".form-edit")[6].innerHTML = html.formEditCamara;
-	s(".form-edit")[7].innerHTML = html.formEditProcesador;
 
 	post(DIR + "device-single.php", {id}, device => {
 		let keys = Object.keys(device);
