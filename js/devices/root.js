@@ -11,7 +11,7 @@ function cancelEdit() {
 	s(".card-img-top").src = "img/noImage.png";
 	s("#form-edit-image").style.display = "none";
 	s("#availibility").style.display = "none";
-	s(".form-edit").forEach(tr => {tr.innerHTML= ""});
+	s(".form-edit").forEach(tr => {tr.setAttribute("readonly", "true")});
 	s("#edit").removeChild(s(".edit-control"));
 
 	get(DIR + "delete-edit-image.php");
@@ -70,9 +70,11 @@ function deleteDevice(id){
 }
 
 function editDevice(id){
+	//Hdide availibitlity buttons
 	s("#availibility").style.display = "none";
 	s("#form-edit-image").style.display = "block";
 
+	//Load image to edit
 	s("#edit-image").addEventListener("change", () => {
 		postForm(DIR + "device-edit-image.php", s("#form-edit-image"), response => {
 			switch (response) {
@@ -91,54 +93,41 @@ function editDevice(id){
 		})
 	})
 
-	s(".form-edit").forEach(b => {
-		b.innerHTML = "<input class='input-group-text w-75 form-input-edit' type='text'>";
-	});
-
-	for(let i = 0; i < 5; i++){
-		console.log(s(".form-edit")[i]);
+	//Allow inputs to edit
+	for(let i = 0; i < 10; i++){
 		s(".form-edit")[i].removeAttribute("readonly");
 	}
 
-	post(DIR + "device-single.php", {id}, device => {
-		let keys = Object.keys(device);
-		let inputs = s(".form-input-edit");
+	cargarConsulta(id);
 
-		for (let i = 0; i < 6; i++) {
-			inputs[i].value = device[keys[i]];
-		}
+	//Add buttons to cancel or send the edition
+	if(!edit){
+		let editControl = document.createElement("div");
+		editControl.className = "edit-control";
+		editControl.innerHTML = html.editControl;
+		
+		s("#edit").appendChild(editControl);
+		s("#cancelar").addEventListener("click", () => {cancelEdit()});
+	}
 
-		if (device.foto == undefined) {
-			s(".card-img-top").setAttribute("src", "img/noImage.png");
-		} else {
-			s(".card-img-top").setAttribute("src", "img/phones/" + device.id + device.foto);
-		}
+	edit = true;
 
-		if(!edit){
-			let editControl = document.createElement("div");
-			editControl.className = "edit-control";
-			editControl.innerHTML = html.editControl;
-			
-			s("#edit").appendChild(editControl);
-	
-			s("#cancelar").addEventListener("click", () => {cancelEdit()});
-		}
+	s("#edit").addEventListener("submit", e => {
+	e.preventDefault();
 
-		edit = true;
+	postForm(DIR + "device-edit.php", s("#edit"), r =>{
+		console.log(r);
+			if(r == "1"){
+				//Change the id in case of the model, the storage or the price change
+				let newId = s(`#edit input[name='modelo']`).value + "-" + s(`#edit input[name='almacenamiento']`).value + "-" + s(`#edit input[name='precio']`).value;
+				s(`tr[deviceid='${id}']`).setAttribute("deviceid", newId);
 
-		s("#edit").addEventListener("submit", e => {
-			e.preventDefault();
-
-			postForm(DIR + "device-edit.php", s("#edit"), r =>{
-				if(r == "1"){
-					let newId = s(`#edit input[name='modelo']`).value + "-" + s(`#edit input[name='almacenamiento']`).value + "-" + s(`#edit input[name='precio']`).value;
-
-					s(`tr[deviceid='${id}']`).setAttribute("deviceid", newId);
-					cancelEdit();
-					alert("Dispositivo Editado Correctamente");
-				}
-			});
-		})
+				cancelEdit();
+				alert("Dispositivo Editado Correctamente");
+			}else{
+				alert("La edición no se ha podido realizar");
+			}
+		});
 	});
 }
 

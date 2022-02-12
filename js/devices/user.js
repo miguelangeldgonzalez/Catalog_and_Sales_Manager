@@ -45,7 +45,7 @@ export function cargarConsulta(id){
 			input.value = device[input.getAttribute("name")];
 		});
 
-		s("#id").innerHTML = device.id;
+		//s("#id").innerHTML = device.id;
 
 		if(device.foto == undefined){
 			s(".card-img-top").src = "img/noImage.png";
