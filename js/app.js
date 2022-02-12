@@ -3,6 +3,7 @@ export function get(url, callBack = () => { }, json = false) {
         .then(r => json ? r.json() : r.text())
         .then(r => { callBack(r) });
 }
+
 export function postForm(url, form, callBack = () => {}, json = false, add = undefined) {
     let data = new FormData(form);
 
@@ -16,6 +17,7 @@ export function postForm(url, form, callBack = () => {}, json = false, add = und
         .then(r => json ? r.json() : r.text())
         .then(r => { callBack(r) });
 }
+
 export function post(url, data, callBack, json = true) {
     let dataForm = new FormData();
     let keys = Object.keys(data);
@@ -29,6 +31,8 @@ export function post(url, data, callBack, json = true) {
         .then(r => { callBack(r) });
 }
 
+//Select with an array when there are several elements
+//Select with a HTMLElement whe there is only an element
 export function s(element) {
     let selection = document.querySelectorAll(element);
 
@@ -37,4 +41,9 @@ export function s(element) {
     } else {
         return selection;
     }
+}
+
+//Select ever with an array
+export function sA(element){
+    return document.querySelectorAll(element);
 }

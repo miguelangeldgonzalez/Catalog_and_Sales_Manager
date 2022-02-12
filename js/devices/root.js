@@ -1,4 +1,4 @@
-import { s, get, post, postForm } from "./../app.js";
+import { s, sA, get, post, postForm } from "./../app.js";
 import { cargarConsulta } from "./user.js";
 
 var html;
@@ -190,63 +190,39 @@ function addDevice(){
 
 
 //Cargar Eventos de los botones
-function loadEvents(one) {
+function loadEvents() {
 	s("#availibility").addEventListener("click", () => {
-		let id = s("#id").innerHTML;
+		let id = s("#id").value;
 		let d = s(`tr[deviceid='${id}']`).getAttribute("d") == "true" ? false : true;
 		changeAvailibility(id, d);
 		showControlQuery(d);
 	});
 
-	if(!one){
-		s(".availibility").forEach(button => {
-			button.addEventListener("click", () => {
-				changeAvailibility(button.parentNode.parentNode.getAttribute("deviceid"), button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
-			});
-		});
-	
-		let elements = [
-			{element : ".delete", functionElement : e => {deleteDevice(e)}, attr : "deviceid"},
-			{element : ".edit", functionElement : e => {editDevice(e)}, attr : "deviceid"}
-		];
-	
-		elements.forEach(element => {
-			s(element.element).forEach(button => {
-				button.addEventListener("click", () => {
-					element.functionElement(button.parentNode.parentNode.getAttribute(element.attr));
-				});
-			});
-		});
-	
-		s(".device-item").forEach(button => {
-			button.addEventListener("click", () => {
-				showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? true : false);
-				cargarConsulta(button.parentNode.parentNode.getAttribute("deviceid"));
-			});
-		});
-	}else{
-		var button = s(".availibility");
+	sA(".availibility").forEach(button => {
 		button.addEventListener("click", () => {
-				changeAvailibility(button.parentNode.parentNode.getAttribute("deviceid"), button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
+			changeAvailibility(button.parentNode.parentNode.getAttribute("deviceid"), button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
 		});
+	});
 	
-		let elements = [
-			{element : ".delete", functionElement : e => {deleteDevice(e)}, attr : "deviceid"},
-			{element : ".edit", functionElement : e => {editDevice(e)}, attr : "deviceid"}
-		];
-	
-		elements.forEach(element => {
-			s(element.element).addEventListener("click", () => {
+	let elements = [
+		{element : ".delete", functionElement : e => {deleteDevice(e)}, attr : "deviceid"},
+		{element : ".edit", functionElement : e => {editDevice(e)}, attr : "deviceid"}
+	];
+
+	elements.forEach(element => {
+		sA(element.element).forEach(button => {
+			button.addEventListener("click", () => {
 				element.functionElement(button.parentNode.parentNode.getAttribute(element.attr));
 			});
 		});
-		
-	
-		s(".device-item").addEventListener("click", () => {
+	});
+
+	sA(".device-item").forEach(button => {
+		button.addEventListener("click", () => {
 			showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? true : false);
 			cargarConsulta(button.parentNode.parentNode.getAttribute("deviceid"));
 		});
-	}
+	});
 
 	s("#add").addEventListener("submit", e => {
 		e.preventDefault();
@@ -281,7 +257,7 @@ function showControlDevices() {
 	
 		});
 
-		loadEvents(devices.length == 1 ? true : false);
+		loadEvents();
 	});
 }
 
