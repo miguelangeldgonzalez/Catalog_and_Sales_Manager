@@ -23,12 +23,13 @@ function changeAvailibility(id, availibility){
 		d: availibility ? 1 : 0
 	};
 	
+	console.log(availibility);
 	if(!availibility){
-		s(`tr[deviceid='${data.id}']`).setAttribute("d", "false");
-		s(`tr[deviceid='${data.id}'] .availibility`).src = "img/icons/x.png";
+		s(`tr['deviceId='${data.id}']`).setAttribute("d", "false");
+		s(`tr['deviceId='${data.id}'] .availibility`).src = "img/icons/x.png";
 	}else{
-		s(`tr[deviceid='${data.id}']`).setAttribute("d", "true");
-		s(`tr[deviceid='${data.id}'] .availibility`).src = "img/icons/check.png";
+		s(`tr['deviceId='${data.id}']`).setAttribute("d", "true");
+		s(`tr['deviceId='${data.id}'] .availibility`).src = "img/icons/check.png";
 	}
 	
 	post(DIR + "device-change-availibility.php", data, () => {});
@@ -61,7 +62,7 @@ function showControlQuery(availibility) {
 function deleteDevice(id){
 	if (confirm("Deseas eliminarlo?")) {
 		post(DIR + 'device-delete.php', { id }, () => {
-			s("#devices").removeChild(s(`tr[deviceid='${id}']`));
+			s("#devices").removeChild(s(`#${id}`));
 			if(s("#id input").value == id || s("#id").innerHTML == id){
 				cancelEdit();
 			}
@@ -118,9 +119,6 @@ function editDevice(id){
 	postForm(DIR + "device-edit.php", s("#edit"), r =>{
 		console.log(r);
 			if(r == "1"){
-				//Change the id in case of the model, the storage or the price change
-				let newId = s(`#edit input[name='modelo']`).value + "-" + s(`#edit input[name='almacenamiento']`).value + "-" + s(`#edit input[name='precio']`).value;
-				s(`tr[deviceid='${id}']`).setAttribute("deviceid", newId);
 
 				cancelEdit();
 				alert("Dispositivo Editado Correctamente");
@@ -133,11 +131,11 @@ function editDevice(id){
 
 function addSingle(device){
 	let tr = document.createElement("tr");
-	tr.setAttribute("deviceid", device.id);
+	tr.setAttribute("id", device.id);
 	tr.setAttribute("d", true);
 	s("#devices").appendChild(tr);
 
-	s(`tr[deviceid="${device.id}"]`).innerHTML = `
+	s(`tr['deviceId='${device.id}']`).innerHTML = `
 		<td>${device.marca}</td> 
 		<td><a class="device-item" href="#disponible">${device.modelo}</a></td>
 		<td>${device.precio}</td>
@@ -145,18 +143,18 @@ function addSingle(device){
 		<td><input type="image" width="16px" height="16px" src="img/icons/delete.png" class="delete" /></td>
 		<td><input type="image" width="16px" height="16px" src="img/icons/edit.png" class="edit" /></td>`;
 
-	s(`tr[deviceid="${device.id}"] .device-item`).addEventListener("click", () => {
-		showControlQuery(s(`tr[deviceid="${device.id}"]`).getAttribute("d") == "true" ? true : false);
+	s(`tr['deviceId='${device.id}'] .device-item`).addEventListener("click", () => {
+		showControlQuery(s(`tr['deviceId='${device.id}']`).getAttribute("d") == "true" ? true : false);
 		cargarConsulta(device.id);
 	});
 
-	s(`tr[deviceid="${device.id}"] .availibility`).addEventListener("click", () => {
-		changeAvailibility(device.id, s(`tr[deviceid="${device.id}"]`).getAttribute("d") == "true" ? false : true);
+	s(`tr['deviceId='${device.id}'] .availibility`).addEventListener("click", () => {
+		changeAvailibility(device.id, s(`tr['deviceId='${device.id}']`).getAttribute("d") == "true" ? false : true);
 	});
 
 	let elements = [
-		{element : `tr[deviceid="${device.id}"] .delete`, functionElement : e => {deleteDevice(e)}},
-		{element : `tr[deviceid="${device.id}"] .edit`, functionElement : e => {editDevice(e)}}
+		{element : `tr['deviceId='${device.id}'] .delete`, functionElement : e => {deleteDevice(e)}},
+		{element : `tr['deviceId='${device.id}'] .edit`, functionElement : e => {editDevice(e)}}
 	];
 
 	elements.forEach(element => {
@@ -187,32 +185,30 @@ function addDevice(){
 	}, true);
 }
 
-
-
 //Cargar Eventos de los botones
 function loadEvents() {
 	s("#availibility").addEventListener("click", () => {
 		let id = s("#id").value;
-		let d = s(`tr[deviceid='${id}']`).getAttribute("d") == "true" ? false : true;
+		let d = s(`tr['deviceId='${id}']`).getAttribute("d") == "true" ? false : true;
 		changeAvailibility(id, d);
 		showControlQuery(d);
 	});
 
 	sA(".availibility").forEach(button => {
 		button.addEventListener("click", () => {
-			changeAvailibility(button.parentNode.parentNode.getAttribute("deviceid"), button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
+			changeAvailibility(button.parentNode.parentNode.getAttribute("deviceId"), button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
 		});
 	});
 	
 	let elements = [
-		{element : ".delete", functionElement : e => {deleteDevice(e)}, attr : "deviceid"},
-		{element : ".edit", functionElement : e => {editDevice(e)}, attr : "deviceid"}
+		{element : ".delete", functionElement : e => {deleteDevice(e)}},
+		{element : ".edit", functionElement : e => {editDevice(e)}}
 	];
 
 	elements.forEach(element => {
 		sA(element.element).forEach(button => {
 			button.addEventListener("click", () => {
-				element.functionElement(button.parentNode.parentNode.getAttribute(element.attr));
+				element.functionElement(button.parentNode.parentNode.getAttribute("deviceId"));
 			});
 		});
 	});
@@ -220,7 +216,7 @@ function loadEvents() {
 	sA(".device-item").forEach(button => {
 		button.addEventListener("click", () => {
 			showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? true : false);
-			cargarConsulta(button.parentNode.parentNode.getAttribute("deviceid"));
+			cargarConsulta(button.parentNode.parentNode.getAttribute("deviceId"));
 		});
 	});
 
@@ -238,18 +234,18 @@ function showControlDevices() {
 		
 		devices.forEach(device => {
 			for (let i = 0; i < 3; i++) {
-				s(`tr[deviceid='${device.id}']`).appendChild(document.createElement('td'));
+				s(`tr['deviceId='${device.id}']`).appendChild(document.createElement('td'));
 			}
 			
 
-			let td = s(`tr[deviceid='${device.id}'] td`);
+			let td = s(`tr['deviceId='${device.id}'] td`);
 				
 			if (device.disponible == "1") {
 				td[3].innerHTML = html.availibilityTrue;
-				s(`tr[deviceid='${device.id}']`).setAttribute("d", true);
+				s(`tr['deviceId='${device.id}']`).setAttribute("d", true);
 			} else {
 				td[3].innerHTML = html.availibilityFalse;
-				s(`tr[deviceid='${device.id}']`).setAttribute("d", false);
+				s(`tr['deviceId='${device.id}']`).setAttribute("d", false);
 			}
 
 			td[4].innerHTML = html.deleteButton;
