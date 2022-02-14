@@ -59,9 +59,11 @@ function editInformation() {
 
 function editPhoto() {
     postForm(DIR + "change-image.php", s("#main-form"), response => {
+        console.log(response);
         switch (response) {
             case ".jpg":
             case ".png":
+                alert("Imagen editada correctamente");
                 let src = "img/profiles-photos/" + user.username + response + "?nocache=" + Math.random();
                 s(".card-img-top").setAttribute("src", src);
                 s("input[name='image'").value = "";
@@ -146,7 +148,7 @@ function loadUser() {
 
 
         if (user.foto != "") {
-            s(".card-img-top").setAttribute("src", "img/profiles-photos/" + user.username + user.foto);
+            s(".card-img-top").setAttribute("src", "img/profiles-photos/" + user.username + user.foto + "?nocache=" + Math.random());
         }
 
         s("#main-form .form-control").forEach(button => {   
