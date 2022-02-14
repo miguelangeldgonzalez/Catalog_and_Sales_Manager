@@ -14,7 +14,9 @@ if($_FILES['foto']['size'] > 3000000000){
 		$procesador = array('name' => $_POST['procesadorNombre'], 'GHZ' => $_POST['procesadorGHZ']);
 		$_POST['procesador'] = json_encode($procesador);
 		
-		$_POST['id'] = $_POST['modelo']."-".$_POST['almacenamiento']."-".$_POST['precio'];
+		date_default_timezone_set("America/Caracas");
+		$date = date('Y-m-d_H-i-s', time());
+		$_POST['id'] = "D-$date";
 		$_POST['disponible'] = 1;
 		
 		

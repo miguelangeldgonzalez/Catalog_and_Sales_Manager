@@ -1,4 +1,4 @@
-import {s, get, post} from "./../app.js";
+import {s, sA, get, post} from "./../app.js";
 
 const DIR = "php/devices/";
 let admin = false;
@@ -39,7 +39,6 @@ export function cargarConsulta(id){
 		});
 
 		//s("#id").innerHTML = device.id;
-
 		if(device.foto == undefined){
 			s(".card-img-top").src = "img/noImage.png";
 		}else{

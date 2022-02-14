@@ -11,7 +11,6 @@ $camara = "{\"front\":\"".$_POST['camara_frontal']."\",\"back\":\"".$_POST['cama
 $procesador = "{\"name\":\"".$_POST['nombre_procesador']."\",\"GHZ\":\"".$_POST['capacidad_procesador']."\"}";
 $SO = $_POST['SO'];
 $id = $_POST['id'];
-$new_id = $modelo."-".$almacenamiento."-".$precio;
 
 $foto = false;
 
@@ -31,13 +30,13 @@ if($foto){
     
     foreach($formats as $f){
         if(file_exists("../../img/tmpImage".$f)){
-            rename("../../img/tmpImage".$f, "../../img/phones/".$new_id.$f);
+            rename("../../img/tmpImage".$f, "../../img/phones/".$id.$f);
         }
     }
 }
 
 
-$query = "UPDATE `devices` SET `id`='$new_id', `marca`='$marca',`modelo`='$modelo',`precio`='$precio',`RAM`='$RAM',`almacenamiento`='$almacenamiento',`camara`='$camara',`procesador`='$procesador',`SO`='$SO' WHERE `id` = '$id'";
+$query = "UPDATE `devices` SET `marca`='$marca',`modelo`='$modelo',`precio`='$precio',`RAM`='$RAM',`almacenamiento`='$almacenamiento',`camara`='$camara',`procesador`='$procesador',`SO`='$SO' WHERE `id` = '$id'";
 
 $result = mysqli_query($link, $query);
 

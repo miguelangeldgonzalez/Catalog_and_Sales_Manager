@@ -25,11 +25,11 @@ function changeAvailibility(id, availibility){
 	
 	console.log(availibility);
 	if(!availibility){
-		s(`tr['deviceId='${data.id}']`).setAttribute("d", "false");
-		s(`tr['deviceId='${data.id}'] .availibility`).src = "img/icons/x.png";
+		s(`tr[deviceId='${data.id}']`).setAttribute("d", "false");
+		s(`tr[deviceId='${data.id}'] .availibility`).src = "img/icons/x.png";
 	}else{
-		s(`tr['deviceId='${data.id}']`).setAttribute("d", "true");
-		s(`tr['deviceId='${data.id}'] .availibility`).src = "img/icons/check.png";
+		s(`tr[deviceId='${data.id}']`).setAttribute("d", "true");
+		s(`tr[deviceId='${data.id}'] .availibility`).src = "img/icons/check.png";
 	}
 	
 	post(DIR + "device-change-availibility.php", data, () => {});
@@ -62,8 +62,8 @@ function showControlQuery(availibility) {
 function deleteDevice(id){
 	if (confirm("Deseas eliminarlo?")) {
 		post(DIR + 'device-delete.php', { id }, () => {
-			s("#devices").removeChild(s(`#${id}`));
-			if(s("#id input").value == id || s("#id").innerHTML == id){
+			s("#devices").removeChild(s(`tr[deviceId='${id}']`));
+			if(s("#id input").value == id || s(`tr[deviceId='${id}']`).innerHTML == id){
 				cancelEdit();
 			}
 		});
@@ -117,9 +117,8 @@ function editDevice(id){
 	e.preventDefault();
 
 	postForm(DIR + "device-edit.php", s("#edit"), r =>{
-		console.log(r);
 			if(r == "1"){
-
+				s("#edit").reset();
 				cancelEdit();
 				alert("Dispositivo Editado Correctamente");
 			}else{
@@ -131,11 +130,11 @@ function editDevice(id){
 
 function addSingle(device){
 	let tr = document.createElement("tr");
-	tr.setAttribute("id", device.id);
+	tr.setAttribute("deviceId", device.id);
 	tr.setAttribute("d", true);
 	s("#devices").appendChild(tr);
 
-	s(`tr['deviceId='${device.id}']`).innerHTML = `
+	s(`tr[deviceId='${device.id}']`).innerHTML = `
 		<td>${device.marca}</td> 
 		<td><a class="device-item" href="#disponible">${device.modelo}</a></td>
 		<td>${device.precio}</td>
@@ -143,18 +142,18 @@ function addSingle(device){
 		<td><input type="image" width="16px" height="16px" src="img/icons/delete.png" class="delete" /></td>
 		<td><input type="image" width="16px" height="16px" src="img/icons/edit.png" class="edit" /></td>`;
 
-	s(`tr['deviceId='${device.id}'] .device-item`).addEventListener("click", () => {
-		showControlQuery(s(`tr['deviceId='${device.id}']`).getAttribute("d") == "true" ? true : false);
+	s(`tr[deviceId='${device.id}'] .device-item`).addEventListener("click", () => {
+		showControlQuery(s(`tr[deviceId='${device.id}']`).getAttribute("d") == "true" ? true : false);
 		cargarConsulta(device.id);
 	});
 
-	s(`tr['deviceId='${device.id}'] .availibility`).addEventListener("click", () => {
-		changeAvailibility(device.id, s(`tr['deviceId='${device.id}']`).getAttribute("d") == "true" ? false : true);
+	s(`tr[deviceId='${device.id}'] .availibility`).addEventListener("click", () => {
+		changeAvailibility(device.id, s(`tr[deviceId='${device.id}']`).getAttribute("d") == "true" ? false : true);
 	});
 
 	let elements = [
-		{element : `tr['deviceId='${device.id}'] .delete`, functionElement : e => {deleteDevice(e)}},
-		{element : `tr['deviceId='${device.id}'] .edit`, functionElement : e => {editDevice(e)}}
+		{element : `tr[deviceId='${device.id}'] .delete`, functionElement : e => {deleteDevice(e)}},
+		{element : `tr[deviceId='${device.id}'] .edit`, functionElement : e => {editDevice(e)}}
 	];
 
 	elements.forEach(element => {
@@ -175,9 +174,9 @@ function addDevice(){
 				alert("La imagen tiene un formato no admitido");
 				break;
 			case 3:
+				s("#add").reset();
 				alert("Dispositivo Añadido Correctamente");
 				addSingle(response);
-				s("#add").reset();
 				break;
 			default:
 				alert("No se pudo añadir el dispositivo");
@@ -189,7 +188,7 @@ function addDevice(){
 function loadEvents() {
 	s("#availibility").addEventListener("click", () => {
 		let id = s("#id").value;
-		let d = s(`tr['deviceId='${id}']`).getAttribute("d") == "true" ? false : true;
+		let d = s(`tr[deviceId='${id}']`).getAttribute("d") == "true" ? false : true;
 		changeAvailibility(id, d);
 		showControlQuery(d);
 	});
@@ -216,7 +215,6 @@ function loadEvents() {
 	sA(".device-item").forEach(button => {
 		button.addEventListener("click", () => {
 			showControlQuery(button.parentNode.parentNode.getAttribute("d") == "true" ? true : false);
-			cargarConsulta(button.parentNode.parentNode.getAttribute("deviceId"));
 		});
 	});
 
@@ -234,18 +232,18 @@ function showControlDevices() {
 		
 		devices.forEach(device => {
 			for (let i = 0; i < 3; i++) {
-				s(`tr['deviceId='${device.id}']`).appendChild(document.createElement('td'));
+				s(`tr[deviceId='${device.id}']`).appendChild(document.createElement('td'));
 			}
 			
 
-			let td = s(`tr['deviceId='${device.id}'] td`);
+			let td = s(`tr[deviceId='${device.id}'] td`);
 				
 			if (device.disponible == "1") {
 				td[3].innerHTML = html.availibilityTrue;
-				s(`tr['deviceId='${device.id}']`).setAttribute("d", true);
+				s(`tr[deviceId='${device.id}']`).setAttribute("d", true);
 			} else {
 				td[3].innerHTML = html.availibilityFalse;
-				s(`tr['deviceId='${device.id}']`).setAttribute("d", false);
+				s(`tr[deviceId='${device.id}']`).setAttribute("d", false);
 			}
 
 			td[4].innerHTML = html.deleteButton;

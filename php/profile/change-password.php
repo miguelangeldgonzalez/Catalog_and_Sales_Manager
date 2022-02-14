@@ -6,7 +6,7 @@
 	$password = $_POST['password'];
 
 	$query = "username = '$username'";
-	$result = query("usuarios", $query);
+	$result = query("users", $query);
 
 	if(password_verify($password, $result[0]['password'])){
 		$_POST['new-password'] = password_hash($_POST['new-password'], PASSWORD_DEFAULT);

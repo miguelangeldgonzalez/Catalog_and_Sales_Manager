@@ -32,7 +32,7 @@ export function post(url, data, callBack, json = true) {
 }
 
 //Select with an array when there are several elements
-//Select with a HTMLElement whe there is only an element
+//Select with a HTMLElement when there is only an element
 export function s(element) {
     let selection = document.querySelectorAll(element);
 
