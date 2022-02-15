@@ -36,7 +36,7 @@ function changeAvailibility(id, availibility){
 }
 
 //Cargar control de la consulta
-function showControlQuery(availibility) {
+export function showControlQuery(availibility) {
 	if(edit){
 		cancelEdit();
 	}

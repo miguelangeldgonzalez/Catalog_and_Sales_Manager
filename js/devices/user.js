@@ -1,5 +1,6 @@
 import { s, sA, get, post } from "./../app.js";
 import { getUser } from "../utilities.js";
+import {showControlQuery} from "./root.js";
 
 const DIR = "php/devices/";
 let admin = false;
@@ -26,7 +27,6 @@ function fetchDevices() {
 				cargarConsulta(b.parentNode.parentNode.getAttribute("deviceid"));
 			});
 		});
-
 	});
 }
 
@@ -59,7 +59,7 @@ s("#close").addEventListener("click", () => {
 	closeSession();
 });
 
-// Carga del usuario
+// Load User
 getUser(range => {
 	if (range > 1) {
 		admin = true;
@@ -73,7 +73,7 @@ getUser(range => {
 	fetchDevices();
 });
 
-//Busqueda
+//Search
 document.addEventListener("DOMContentLoaded", function () {
 
 	s('#search').addEventListener("keyup", () => {
@@ -86,13 +86,29 @@ document.addEventListener("DOMContentLoaded", function () {
 				let template = '';
 
 				devices.forEach(device => {
-					template += `<li><a deviceId="${device.id}" class="device-item" href="#">${device.modelo}</a></li>`;
+					template += `<li><a deviceId="${device.id}" class="device-search-item" href="#">${device.modelo}</a></li>`;
 				});
 
 				if (devices == '') {
 					s('#container').innerHTML = `No results for the search.`;
 				} else {
 					s("#container").innerHTML = template;
+
+					sA(".device-search-item").forEach(b => {
+						b.addEventListener("click", () => {
+							cargarConsulta(b.getAttribute("deviceId"));
+						});
+					});
+
+					if(admin){
+						sA(".device-search-item").forEach(b => {
+							b.addEventListener("click", () => {
+								let id = b.getAttribute("deviceId");
+								let d = s(`tr[deviceid='${id}']`).getAttribute("d") == "true" ? false : true;
+								showControlQuery(d);
+							});
+						});
+					}
 				}
 				s('#search-result').style.display = "block";
 			});
