@@ -1,13 +1,14 @@
-import {s, sA, get, post} from "./../app.js";
+import { s, sA, get, post } from "./../app.js";
+import { getUser } from "../utilities.js";
 
 const DIR = "php/devices/";
 let admin = false;
 
 //Mostrar Dispositivos
-function fetchDevices(){
+function fetchDevices() {
 	s(".card-img-top").src = "img/noImage.png";
 
-	post(DIR + "device-list.php", {admin}, function(devices){
+	post(DIR + "device-list.php", { admin }, function (devices) {
 		let template = "";
 
 		devices.forEach(device => {
@@ -17,11 +18,11 @@ function fetchDevices(){
 						<td><a class="device-item" href="#disponible">${device.modelo}</a></td>
 						<td>${device.precio}</td>
 					</tr>`;
-			});
+		});
 		s('#devices').innerHTML = template;
 
-		sA(".device-item").forEach(b =>{
-			b.addEventListener("click", () =>{
+		sA(".device-item").forEach(b => {
+			b.addEventListener("click", () => {
 				cargarConsulta(b.parentNode.parentNode.getAttribute("deviceid"));
 			});
 		});
@@ -30,8 +31,8 @@ function fetchDevices(){
 }
 
 //cargar la consulta
-export function cargarConsulta(id){
-	post(DIR + "device-single.php", {id}, function(device){
+export function cargarConsulta(id) {
+	post(DIR + "device-single.php", { id }, function (device) {
 		let inputs = s(".form-edit");
 
 		inputs.forEach(input => {
@@ -39,16 +40,16 @@ export function cargarConsulta(id){
 		});
 
 		//s("#id").innerHTML = device.id;
-		if(device.foto == undefined){
+		if (device.foto == undefined) {
 			s(".card-img-top").src = "img/noImage.png";
-		}else{
+		} else {
 			s(".card-img-top").src = "img/phones/" + device.id + device.foto;
 		}
 	});
 }
 
 //Cerrar Sesion
-function closeSession(){
+function closeSession() {
 	get("php/close.php", r => {
 		window.location = "index.html";
 	});
@@ -59,62 +60,43 @@ s("#close").addEventListener("click", () => {
 });
 
 // Carga del usuario
-get("php/user.php", response => {
-	if(response == ""){
-		window.location = "index.html";
-	}
-	
-	let data = response[0];
-	s("#title").innerHTML = data.nombres;
-	
-	let add = "";
-	let nav = s("#nav").innerHTML;
-
-	
-	if(data.cargo == "Administracion" || data.cargo == "Gerencia" || data.cargo == "Control"){
+getUser(range => {
+	if (range > 1) {
 		admin = true;
-		fetchDevices();
 
 		let script = document.createElement("script");
 		script.setAttribute("type", "module");
 		script.src = 'js/devices/root.js';
 		s("body").appendChild(script);
-		
-		add = nav + "<li class='nav-item'><a class='nav-link' href='panels/employees/employees.html'>Empleados</a></li>";
-
-	}else{
-		s("#add").innerHTML = "";
-		fetchDevices();
-		add = nav;
 	}
 
-	s("#nav").innerHTML = add;
-}, true);
+	fetchDevices();
+});
 
 //Busqueda
-document.addEventListener("DOMContentLoaded", function(){
-	
+document.addEventListener("DOMContentLoaded", function () {
+
 	s('#search').addEventListener("keyup", () => {
 		let search = s('#search');
-		
-		if(search.value){
+
+		if (search.value) {
 			search = search.value;
 
-			post(DIR + 'device-search.php', {search}, devices => {
-					let template = '';
+			post(DIR + 'device-search.php', { search }, devices => {
+				let template = '';
 
-					devices.forEach(device =>{
-						template += `<li><a deviceId="${device.id}" class="device-item" href="#">${device.modelo}</a></li>`;
-					});
+				devices.forEach(device => {
+					template += `<li><a deviceId="${device.id}" class="device-item" href="#">${device.modelo}</a></li>`;
+				});
 
-					if(devices == ''){
-						s('#container').innerHTML = `No results for the search.`;
-					}else{
-						s("#container").innerHTML = template;
-					}
+				if (devices == '') {
+					s('#container').innerHTML = `No results for the search.`;
+				} else {
+					s("#container").innerHTML = template;
+				}
 				s('#search-result').style.display = "block";
 			});
-		}else{
+		} else {
 			s('#search-result').style.display = "none";
 		}
 	});

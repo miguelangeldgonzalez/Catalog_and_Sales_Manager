@@ -1,4 +1,5 @@
 import {s, get, post} from "./app.js";
+import { getUser } from "./utilities.js";
 
 const DIR = "php/employees/";
 
@@ -107,20 +108,13 @@ s("#close").addEventListener("click", () => {
     });
 });
 
-//Carga del usuario
-get("php/user.php", response => {
-    if(response == ""){
-        window.location = "index.html";
-    }
-
-    s("#title").innerHTML = response[0].nombres;
-
-    switch(response[0].cargo){
-        case "Asesor":
+//Load User
+getUser(range =>{
+    switch(range){
+        case 1:
             window.location = "devices.html";
             break;
-        case "Control":
-        case "Gerencia":
+        case 3:
             s(".table-control").forEach(td => {
                 td.style.display = "";
                 admin = true
@@ -129,4 +123,4 @@ get("php/user.php", response => {
     }
 
     fetchEmployees();
-}, true);
+});

@@ -1,4 +1,4 @@
-import {s} from "./app.js";
+import {s, get} from "./app.js";
 
 export function createModal(modalDiv, openModal, windowClick = true){
     let close = s(modalDiv + " .close");
@@ -80,4 +80,46 @@ export function confirmPassword(password, passwordConfirmButton){
     }else{
         return false;
     }
+}
+
+//Load user
+//callBack - Do something after the query
+//Redirect - True if want to redirect to index when there is no loaded users, false otherwise
+export function getUser(callBack, redirect = true){
+    get("php/user.php", response => {
+        let data = {
+            range: 0
+        };
+        if(response == ""){
+            if(redirect){
+                window.location = "index.html";
+            }
+        }else{
+            data = JSON.parse(response)[0];
+            s("#title").innerHTML = data.nombres;
+ 
+            switch(data.cargo){
+                case "Control":
+                case "Gerencia":
+                    data.range = 3;
+                    break;
+                case "Administracion":
+                    data.range = 2;
+                    break;
+                case "Asesor":
+                    data.range = 1;
+                    break;
+                default:
+                    window.location = "index.html";
+            }
+
+            //Add employee panel for users with
+            //Control, managment and adminsitration permission
+            if(data.range > 1 && !! s("#nav")){
+                s("#nav").innerHTML += "<li class='nav-item'><a class='nav-link' href='./employees.html'>Empleados</a></li>";
+            }
+        }
+
+        callBack(data.range);
+    });
 }

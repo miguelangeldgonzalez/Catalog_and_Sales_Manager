@@ -1,24 +1,24 @@
-import { s, get, postForm } from "./app.js";
+import { s, postForm } from "./app.js";
+import { getUser } from "./utilities.js";
 
 //Comprobar si hay una sesión activa
-get("php/user.php", function (response) {
-	switch (response.cargo) {
-		case "Control":
-		case "Asesor":
-		case "Administración":
-			window.location = "devices.html";
+getUser(range => {
+	if(range > 0){
+		window.location = "devices.html";
+
+	}else{
+		s("#form").addEventListener("submit", e => {
+			e.preventDefault();
+		
+			postForm("php/index/logIn.php", s("#form"), function (response) {
+				console.log(response);
+				if (response == "1") {
+					window.location = "devices.html";
+				} else {
+					alert("Usuario o contraseña incorrecto.");
+				}
+			});
+		});
 	}
-}, true);
+}, false);
 
-s("#form").addEventListener("submit", e => {
-	e.preventDefault();
-
-	postForm("php/index/logIn.php", s("#form"), function (response) {
-		console.log(response);
-		if (response == "1") {
-			window.location = "devices.html";
-		} else {
-			alert("Usuario o contraseña incorrecto.");
-		}
-	});
-});
