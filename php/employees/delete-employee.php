@@ -3,7 +3,7 @@
 include "../../php/db.php";
 
 $id = $_POST['id'];
-$query = "DELETE FROM usuarios WHERE `id` = '$id'";
+$query = "DELETE FROM users WHERE `id` = '$id'";
 
 $result = mysqli_query($link, $query);
 

@@ -5,7 +5,7 @@ include '../../php/db.php';
 $id = $_POST['id'];
 $cargo = $_POST['cargo'];
 
-$query = "UPDATE `usuarios` SET `cargo`='$cargo' WHERE `id` = '$id'";
+$query = "UPDATE `users` SET `cargo`='$cargo' WHERE `id` = '$id'";
 
 $result = mysqli_query($link, $query);
 

@@ -1,4 +1,6 @@
-import {s, get, post} from "./../../js/app.js";
+import {s, get, post} from "./app.js";
+
+const DIR = "php/employees/";
 
 let admin = false;
 let edit = false;
@@ -9,7 +11,7 @@ s(".table-control").forEach(td => {
 
 function deleteEmployee(id){
     if(confirm("Seguro que desea eliminar el usuario del empleado?")){
-        post("delete-employee.php", {id}, function(response){
+        post(DIR + "delete-employee.php", {id}, function(response){
             if(response == "1"){
                 fetchEmployees();
             }
@@ -46,10 +48,9 @@ function sendEdit(id){
         cargo: s(`#s${id}`).value
     }
 
-    post("edit-employee.php", data, function(response){
-        console.log(response);
-
+    post(DIR + "edit-employee.php", data, function(response){
         if(response == "1"){
+            alert("Empleado editado correctamente");
             fetchEmployees();
         }
     });
@@ -71,10 +72,10 @@ function loadEvents(){
 
 function fetchEmployees(){
     edit = false;
-    get("employees.php", employees => {
+    get(DIR + "employees.php", employees => {
         let template = "";
-
         employees.forEach(employee => {
+            employee = employee[0];
             template += `
             <tr>
                     <td>${employee.nombres}</td>
@@ -86,8 +87,8 @@ function fetchEmployees(){
             
             if(admin){
                 template += `
-                <td><a href="#" class="edit" employeeId="${employee.id}"><img src="../../img/icons/edit.png" width="16px" height="16px"></a></td>
-                <td><a href="#" class="delete" employeeId="${employee.id}"><img src="../../img/icons/x.png" width="16px" height="16px"></a></td>
+                <td><a href="#" class="edit" employeeId="${employee.id}"><img src="img/icons/edit.png" width="16px" height="16px"></a></td>
+                <td><a href="#" class="delete" employeeId="${employee.id}"><img src="img/icons/x.png" width="16px" height="16px"></a></td>
                 </tr>`;
             }else{
                 template += "</tr>";
@@ -101,22 +102,22 @@ function fetchEmployees(){
 
 //Cerrar Sesion
 s("#close").addEventListener("click", () => {
-    get("../../php/close.php", () => {
-        window.location = "../../index.html";
+    get("php/close.php", () => {
+        window.location = "index.html";
     });
 });
 
 //Carga del usuario
-get("../../php/user.php", response => {
+get("php/user.php", response => {
     if(response == ""){
-        window.location = "../../index.html";
+        window.location = "index.html";
     }
 
     s("#title").innerHTML = response[0].nombres;
 
     switch(response[0].cargo){
         case "Asesor":
-            window.location = "../../devices.html";
+            window.location = "devices.html";
             break;
         case "Control":
         case "Gerencia":

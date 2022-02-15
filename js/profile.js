@@ -1,4 +1,4 @@
-import { s, post, get, postForm } from "./app.js";
+import { s, get, postForm } from "./app.js";
 import {createModal, confirmPassword} from "./utilities.js";
 
 let user = undefined;
