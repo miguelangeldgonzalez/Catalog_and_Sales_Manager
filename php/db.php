@@ -11,7 +11,6 @@
 		}
 	
 		$result = mysqli_query($GLOBALS['link'], $query);
-	
 		$out = [];
 	
 		while($row = mysqli_fetch_assoc($result)){
@@ -19,17 +18,11 @@
 			foreach($row as $key => $value){
 				$values[$key] = $value;
 			}
-			$out[] = array($values);
+			$out[] = $values;
 		}
 		
-		if(count($out) == 1){
-			return $out[0];
-		}else{
-			return $out;
-		}
+		return $out;
 	}
-
-	$link = mysqli_connect("localhost", "root", "", "acm");
 
 	function insert($tabla){
 		

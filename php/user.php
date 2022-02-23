@@ -9,7 +9,7 @@ if(!empty($_SESSION['username'])){
     $query = "username = '$username'";
 
     $json = query("users", $query);
-    $out = json_encode($json);
+    $out = json_encode($json[0]);
 
     echo $out;
 }else{

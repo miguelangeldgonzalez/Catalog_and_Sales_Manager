@@ -1,5 +1,4 @@
 import { s, sA, get, post, postForm } from "./../app.js";
-import { cargarConsulta } from "./user.js";
 
 var html;
 var edit = false;
@@ -267,8 +266,8 @@ get("js/devices/html.json", r => {
 
 	s(".card-body")[0].insertBefore(button, s("#edit"));
 	
-	get("panels/devices/add.html", (e) => {
+	get("panels/real-state/add.html", (e) => {
 		s(".col-md-7 div")[3].innerHTML = e;
-		showControlDevices();
+		//showControlDevices();
 	});
 }, true);

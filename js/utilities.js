@@ -86,16 +86,21 @@ export function confirmPassword(password, passwordConfirmButton){
 //callBack - Do something after the query
 //Redirect - True if want to redirect to index when there is no loaded users, false otherwise
 export function getUser(callBack, redirect = true){
-    get("php/user.php", response => {
-        let data = {
-            range: 0
-        };
-        if(response == ""){
+    //Add event to close the session
+	s("#close").addEventListener("click", () => {
+		get("php/close.php", r => {
+			window.location = "index.html";
+		});
+	});
+
+    get("php/user.php", data => {
+        data.range = 0;
+
+        if(data == ""){
             if(redirect){
                 window.location = "index.html";
             }
         }else{
-            data = JSON.parse(response)[0];
             s("#title").innerHTML = data.nombres;
  
             switch(data.cargo){
@@ -115,11 +120,13 @@ export function getUser(callBack, redirect = true){
 
             //Add employee panel for users with
             //Control, managment and adminsitration permission
-            if(data.range > 1 && !! s("#nav")){
+            let url = window.location.pathname.split("/");
+            url = url[url.length - 1];
+            if(data.range > 1 && !!s("#nav") && url != "employees.html"){
                 s("#nav").innerHTML += "<li class='nav-item'><a class='nav-link' href='./employees.html'>Empleados</a></li>";
             }
         }
 
         callBack(data.range);
-    });
+    }, true);
 }

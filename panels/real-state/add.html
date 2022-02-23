@@ -1,0 +1,119 @@
+<div>
+    <div class="card">
+    <div class="card-body">
+        <form id="add" enctype="multipart/form-data" method="POST">
+            
+            <!-- Cost, Bathrooms and Rooms -->
+            <div class="row g-3">
+
+                <div class="col-md">
+                    <div class="form-floating">
+                        <label>Precio</label>
+                        <div class="input-group">
+                                <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost">
+                                <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="col-md">
+                    <div class="form-floating">
+                        <label>Habitaciones</label>
+                            <div class="input-group">
+                                <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="rooms">
+                            </div>
+                    </div>
+                </div>
+    
+                <div class="col-md">
+                    <div class="form-floating">
+                        <label>Baños</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="bathrooms" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                            </div>  
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Loaction and square meters -->
+                <div class="row g-2">
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <label>Loaction</label>
+                            <div class="input-group">
+                                <input type="text"class="form-control" name="loaction">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <label>Metros Cuadrados</label>
+                            <div class="input-group">
+                                    <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost">
+                                    <span class="input-group-text" id="basic-addon1">mts²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Start and end of the contract -->
+                <div class="row g-2">
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <label>Principio del Contrato de Captación</label>
+                            <div class="input-group">
+                                <input type="date"class="form-control" name="start_cathment_contract">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <label>Fin del Contrato de <br>Captación</label>
+                            <div class="input-group">
+                                <input type="date"class="form-control" name="end_cathment_contract">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Owner and owner's phone -->
+                <div class="row g-3">
+                        
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <label>Nombre del Propietario</label>
+                                <input type="text" placeholder="Nombre y Apellido" class="form-control" name="owner">                                
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <label>Nombre del Propietario</label>
+                                <input type="number" class="form-control" name="owner_phone">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Submit button -->
+                <div class="row g-3">
+                       <div class="col-md">
+                           <div class="form-floating">
+                               <input type="submit" class=" w-25 form-control btn btn-success" value="Enviar">
+                           </div>
+                       </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="panels/add/add.js"></script>
+
+</div>

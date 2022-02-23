@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Catálogo</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<meta charset="UTF-8">
+	<style>
+		.table-stripped {
+			margin-top: 1em;
+		}
+
+		.table-stripped td {
+			width: 50%;
+		}
+	</style>
+
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav" id="nav">
+				<li class="nav-item">
+					<a class="nav-link" href="profile.html" id="title"></a>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="true" href="#">Inmuebles</a>
+				</li>
+			</ul>
+		</div>
+
+
+		<ul class="navbar-bar ml-auto">
+			<input type="button" id="close" class="btn btn-danger" value="Cerrar Sesion">
+		</ul>
+	</nav>
+
+	<div class="container p-4">
+		<div class="row">
+
+			<div class="col-md-5">
+				<div class="card">
+					<div class="card-body">
+						<img class="card-img-top" id="query-image" src="img/noImage.png">
+
+						<form enctype="multipart/form-data" class="w-75 my-2" id="form-edit-image" style="display: none;" method="POST">
+							<label>Cambiar Foto</label>
+							<input class="btn btn-primary" type="file" name="edit-image" id="edit-image">
+						</form>
+
+						<form id="edit">
+							<table class="table-stripped table">
+								<tr>
+									<td class="table-dark">Precio</td>
+									<td><input type="text" class="form-edit" name="cost" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Habitaciones</td>
+									<td><input type="text" class="form-edit" name="rooms" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Baños</td>
+									<td><input type="text" class="form-edit" name="bathrooms" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Metros Caudrados</td>
+									<td><input type="text" class="form-edit" name="square_meters" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Inicio del Contrato de Captación</td>
+									<td><input type="text" class="form-edit" name="start_catchment_contract" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Fin del Contrato de Captación</td>
+									<td><input type="text" class="form-edit" name="end_catchment_contract" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Asesor</td>
+									<td>
+										<input type="text" class="form-edit" name="adviser" readonly="true">
+									</td>
+								</tr>
+								<tr>
+									<td class="table-dark">ID</td>
+									<td><input type="text" class="form-edit" id="id" name="id" readonly="true"></td>
+								</tr>
+							</table>
+						</form>
+
+
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-7">
+
+				<div class="d-flex" id="map"></div>
+
+				<div class="d-flex justify-content-start p-2">
+					<input type="search" id="search" class="form-control w-50" placeholder="Search Task">
+					<button type="submit" class="btn btn-success">Search</button>
+				</div>
+
+				<div class="card my-4" id="search-result" style="display: none;">
+					<div class="card-body">
+						<ul id="container">
+
+						</ul>
+					</div>
+				</div>
+
+				<table class="table fetch table-bordered table-sm">
+					<thead>
+						<tr id="fields">
+							<td id="cost">Costo</td>
+							<td id="rooms">Habitaciones</td>
+							<td id="square_meters">Metros Cuadrados</td>
+							<td id="adviser">Asesor</td>
+						</tr>
+					</thead>
+					<tbody id="table-list">
+
+					</tbody>
+				</table>
+
+				<div></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script type="module" src="js/real-state/user.js"></script>
+</body>
+
+</html>
