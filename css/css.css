@@ -1,0 +1,43 @@
+.table-stripped {
+    margin-top: 1em;
+}
+
+.table-stripped td {
+    width: 50%;
+}
+input[type=date].form-contol::-webkit-calendar-picker-indicator{
+    cursor: pointer!important;
+}
+.card .img-add-form{
+    width: 30%;
+    margin: 10px auto;
+}
+form .card{
+    margin: 20px;
+    display: inline-block;
+}
+form .images-conteiner{
+    text-align: center;
+    display: inline-block;
+    width: 98%;
+    margin: 1%;
+}
+form .descriptions-conteiner{
+    display: flex;
+    flex-wrap: wrap;
+    width: 98%;
+    margin: 1%;
+}
+.card .descriptions-conteiner .description{
+    border: 1px solid rgba(0, 0, 0, .125);
+    display: inline-block;
+    margin: 1% 2.2%;
+    width: 45%;
+    min-height: 150px;
+    text-align: center;
+}
+.descriptions-conteiner h4, .images-conteiner h4{
+    color: #55595c;
+    width: 100%;
+    margin-top: 10px;
+}

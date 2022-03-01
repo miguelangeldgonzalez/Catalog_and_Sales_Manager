@@ -2,6 +2,7 @@
 
 //If already exist a temporal image delete it
 $formats = array(".jpeg", ".png", ".jpg");
+define('ROOT_PATH', realpath(dirname(__FILE__)));
 
 function deleteTemporalImage(){
     foreach($GLOBALS['formats'] as $f){
@@ -13,8 +14,8 @@ function deleteTemporalImage(){
 
 function deleteMultipleImage(){
     foreach($GLOBALS['formats'] as $f){
-        if(file_exists("../../img/tmpMultipleImage0".$f)){
-            array_map('unlink', glob("../img/tmpImageMultiple*.*"));
+        if(file_exists(ROOT_PATH."\..\img\\tmpImageMultiple0".$f)){
+            array_map('unlink', glob(ROOT_PATH."\..\img\\tmpImageMultiple*.*"));
         }
     }
 }
@@ -47,20 +48,25 @@ function getFormat($format){
 // $multiple = false is there is only one image or false if there are multiple images
 function loadTemporalImage($file_name, $multiple = false){
     $file = $_FILES[$file_name];
+    $file_data = [];
 
     if(!$multiple){
         if(checkImage($file['type'], $file['size']) == 1){
             deleteTemporalImage();
             move_uploaded_file($file['tmp_name'], "../img/tmpImage".getFormat($file['type']));
+            array_push($file_data, getFormat($file['type']));
         }
     }else{
         deleteMultipleImage();
         for($i = 0; $i < sizeof($file['name']); $i++){
             if(checkImage($file['type'][$i], $file['size'][$i]) == 1){
-                move_uploaded_file($file['tmp_name'][$i], "../img/tmpImageMultiple".$i.getFormat($file['type']));
+                move_uploaded_file($file['tmp_name'][$i], ROOT_PATH."\..\img\\tmpImageMultiple".$i.getFormat($file['type'][$i]));
+                array_push($file_data, getFormat($file['type'][$i]));
             }
         }
     }
+
+    return $file_data;
 }
 
 ?>

@@ -2,20 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Drag and Drop (2)</title>
+    <style>
+        div{
+            width: 300px;
+            height: 300px;
+            margin: 2px;
+            border: 1px solid black;
+        }
+        #conteiner{
+            display: flex;
+        }
+        .circle{
+            border-radius: 100%;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+        }
+        input{
+        position: absolute;
+        width: 100px;
+        left: 8px;
+        height: 15px;
+        z-index: -1;
+        border-right-color: transparent;
+        }
+        select{
+        width: 130px;
+        height: 21px;
+        z-index: 0;
+        }
+    </style>
 </head>
 <body>
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" id="send" name="file[]" multiple>
-        <input type="button" id="send2">
-    </form>
+    <div id="conteiner">
+        <div id="end"></div>
+        <div id="start">
+            <div class="circle" style="background-color: blue;" draggable="true"></div>
+            <div class="circle" draggable="true"></div>
+        </div>
+    </div>
 
-    <input type="date" id="date">
+    <select>
+        <option>1</option>
+        <option>2</option>
+        <option>Otro... </option>
+    </select>
+    <input type="text" placeholder="Otro..." id="other-text">
 
-    <script src="user.js" type="module"></script>
-    <script src="root.js" type="module"></script>
+    <script>
+        let otherText = document.querySelector("#other-text");
+        let select = document.querySelector("select");
 
+        select.addEventListener("change", () => {
+            if(select.value == "Otro..."){
+                otherText.style.zIndex = 0 + "";
+            }else{
+                otherText.style.zIndex = -1 + "";
+            }
+        });
+
+        class DragHandler{
+            constructor(element){
+                this.conteiner = document.querySelector(element);
+
+                this.moveElement = undefined;
+                this.toElement = undefined;
+
+                conteiner.addEventListener("dragstart", e => { this.moveElement = e.target });
+
+                conteiner.addEventListener("dragover", e => { 
+                    e.preventDefault();
+                    this.toElement = e.target; 
+                });
+
+                conteiner.addEventListener("drop", e => {
+                    this.toElement.appendChild(this.moveElement); 
+                });
+            }
+        }
+
+        new DragHandler("#conteiner");
+    </script>
 </body>
 </html>

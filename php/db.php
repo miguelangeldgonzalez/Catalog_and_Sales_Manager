@@ -12,7 +12,7 @@
 	
 		$result = mysqli_query($GLOBALS['link'], $query);
 		$out = [];
-	
+		
 		while($row = mysqli_fetch_assoc($result)){
 			$values = [];
 			foreach($row as $key => $value){
@@ -46,6 +46,34 @@
 		$insert .= substr($fields, 0, -2) . ") VALUES (" . substr($values, 0, -2) . ")";
 		$result = mysqli_query($GLOBALS['link'], $insert);
 
+		if(!$result){
+			die("Failed: " . mysqli_error($GLOBALS['link']));
+		}else{
+			return true;
+		}
+	}
+
+	function update($tabla, $ignore = []){
+		$query = "SHOW COLUMNS FROM `".$tabla."`";
+		$result = mysqli_query($GLOBALS['link'], $query);
+		array_push($ignore, "id");
+
+		$query = "UPDATE `".$tabla."` SET ";
+		$fields = "";
+		$values = "";
+		
+		while($fila = mysqli_fetch_assoc($result)){
+			if(array_key_exists($fila['Field'], $_POST)){
+				if(!in_array($fila['Field'], $ignore)){
+					print_r($fila['Field'] . " || ");
+					$values .= "`". $fila['Field']."` = '". $_POST[$fila['Field']] . "', ";
+				}
+			}
+		}
+
+		$query .= substr($values, 0, -2) . " WHERE `id` = '" . $_POST['id'] . "'";
+		$result = mysqli_query($GLOBALS['link'], $query);
+		
 		if(!$result){
 			die("Failed: " . mysqli_error($GLOBALS['link']));
 		}else{

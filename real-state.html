@@ -4,7 +4,7 @@
 <head>
 	<title>Catálogo</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<meta charset="UTF-8">
+
 	<style>
 		.table-stripped {
 			margin-top: 1em;
@@ -14,7 +14,9 @@
 			width: 50%;
 		}
 	</style>
-
+	<link rel="stylesheet" type="text/css" href="css/css.css">
+	
+	<meta charset="UTF-8">
 	<meta http-equiv="Expires" content="0">
 	<meta http-equiv="Last-Modified" content="0">
 	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
@@ -51,49 +53,61 @@
 
 						<form enctype="multipart/form-data" class="w-75 my-2" id="form-edit-image" style="display: none;" method="POST">
 							<label>Cambiar Foto</label>
-							<input class="btn btn-primary" type="file" name="edit-image" id="edit-image">
+							<input class="btn btn-primary" type="file" name="edit-image[]" id="edit-image" multiple>
 						</form>
 
 						<form id="edit">
 							<table class="table-stripped table">
 								<tr>
 									<td class="table-dark">Precio</td>
-									<td><input type="text" class="form-edit" name="cost" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="cost" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Habitaciones</td>
-									<td><input type="text" class="form-edit" name="rooms" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="rooms" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Baños</td>
-									<td><input type="text" class="form-edit" name="bathrooms" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="bathrooms" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Metros Caudrados</td>
-									<td><input type="text" class="form-edit" name="square_meters" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="square_meters" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Propietario</td>
+									<td><input type="text" class="form-control form-edit" name="owner" readonly="true"></td>
+								</tr>
+								<tr>
+									<td class="table-dark">Número del Propietario</td>
+									<td><input type="text" class="form-control form-edit" name="owner_phone" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Inicio del Contrato de Captación</td>
-									<td><input type="text" class="form-edit" name="start_catchment_contract" readonly="true"></td>
+									<td><input type="date" class="form-control form-edit" name="start_catchment_contract" style="cursor: text" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Fin del Contrato de Captación</td>
-									<td><input type="text" class="form-edit" name="end_catchment_contract" readonly="true"></td>
+									<td><input type="date" class="form-control form-edit" name="end_catchment_contract" style="cursor: text" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Asesor</td>
 									<td>
-										<input type="text" class="form-edit" name="adviser" readonly="true">
+										<input type="text" class="form-control form-edit" name="adviser" readonly="true">
 									</td>
 								</tr>
 								<tr>
 									<td class="table-dark">ID</td>
-									<td><input type="text" class="form-edit" id="id" name="id" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" id="id" name="id" readonly="true"></td>
 								</tr>
 							</table>
+
+							<div class="edit-control">
+								<input class='btn btn-danger mx-2' id='cancelar' type='button' value='Cancelar'>
+								<input class='btn btn-success' type='submit' value='Enviar'>
+							</div>
+
 						</form>
-
-
 					</div>
 				</div>
 			</div>
@@ -129,10 +143,157 @@
 					</tbody>
 				</table>
 
-				<div></div>
+				<div>
+					<div class="card">
+					<div class="card-body">
+
+						<!-- Load images -->
+						<form method="POST" id="form-add-images" enctype="multipart/formdata">
+							<div class="row g-3">
+								<div class="col-md">
+									<div class="form-floating">
+										<label>Imagenes del Inmueble</label>
+										<input type="file" id="add-images" class="form-control" name="images[]" multiple>                            
+									</div>
+								</div>
+							</div>
+
+							<div id="image-add-handler" style="display: none" class="card">
+								<div class="card images-conteiner">
+									<h4>Images Cargadas</h4>
+								</div>
+
+								<div class="descriptions-conteiner">
+									<div class="description">
+										<h4>Frontal</h2>
+									</div>
+									<div class="description">
+										<h4>Laterales</h2>
+									</div>
+									<div class="description">
+										<h4>Traseras</h2>
+									</div>
+									<div class="description">
+										<h4>Otras</h2>
+									</div>
+								</div>
+							</div>
+						</form>
+						
+						<form id="add" enctype="multipart/form-data" method="POST">
+							
+							<!-- Cost, Bathrooms and Rooms -->
+							<div class="row g-3">
+				
+								<div class="col-md">
+									<div class="form-floating">
+										<label>Precio</label>
+										<div class="input-group">
+												<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost">
+												<span class="input-group-text" id="basic-addon1">$</span>
+										</div>
+									</div>
+								</div>
+					
+								<div class="col-md">
+									<div class="form-floating">
+										<label>Habitaciones</label>
+											<div class="input-group">
+												<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="rooms">
+											</div>
+									</div>
+								</div>
+					
+								<div class="col-md">
+									<div class="form-floating">
+										<label>Baños</label>
+											<div class="input-group">
+												<input type="text" class="form-control" name="bathrooms" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+											</div>  
+										</div>
+									</div>
+				
+								</div>
+								
+								<!-- Loaction and square meters -->
+								<div class="row g-2">
+				
+									<div class="col-md">
+										<div class="form-floating">
+											<label>Loaction</label>
+											<div class="input-group">
+												<input type="text"class="form-control" name="loaction">
+											</div>
+										</div>
+									</div>
+				
+									<div class="col-md">
+										<div class="form-floating">
+											<label>Metros Cuadrados</label>
+											<div class="input-group">
+													<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost">
+													<span class="input-group-text" id="basic-addon1">mts²</span>
+											</div>
+										</div>
+									</div>
+				
+								</div>
+				
+								<!-- Start and end of the contract -->
+								<div class="row g-2">
+				
+									<div class="col-md">
+										<div class="form-floating">
+											<label>Principio del Contrato de Captación</label>
+											<div class="input-group">
+												<input type="date" stye="cursor:text"class="form-control" name="start_cathment_contract">
+											</div>
+										</div>
+									</div>
+				
+									<div class="col-md">
+										<div class="form-floating">
+											<label>Fin del Contrato de <br>Captación</label>
+											<div class="input-group">
+												<input type="date" stye="cursor:text"class="form-control" name="end_cathment_contract">
+											</div>
+										</div>
+									</div>
+				
+								</div>
+				
+								<!-- Owner and owner's phone -->
+								<div class="row g-3">
+										
+									<div class="col-md">
+										<div class="form-floating">
+											<label>Nombre del Propietario</label>
+												<input type="text" placeholder="Nombre y Apellido" class="form-control" name="owner">                                
+										</div>
+									</div>
+				
+									<div class="col-md">
+										<div class="form-floating">
+											<label>Nombre del Propietario</label>
+												<input type="number" class="form-control" name="owner_phone">
+										</div>
+									</div>
+								</div>
+
+								<!-- Submit button -->
+								<div class="row g-3">
+									   <div class="col-md">
+										   <div class="form-floating">
+											   <input type="submit" class=" w-25 form-control btn btn-success" value="Enviar">
+										   </div>
+									   </div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-
 	</div>
 
 	<script type="module" src="js/real-state/user.js"></script>

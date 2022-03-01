@@ -1,0 +1,16 @@
+body{
+    display: flex;
+}
+div{
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+    margin: 2px;
+}
+
+.move{
+    background-color: red;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+}

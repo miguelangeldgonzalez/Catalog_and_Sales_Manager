@@ -1,5 +1,8 @@
 import { s, sA, get, post, postForm } from "./../app.js";
 import { cargarConsulta } from "./user.js";
+import { tableList } from "./user.js";
+
+console.log(tableList);
 
 var html;
 var edit = false;
@@ -25,11 +28,11 @@ function changeAvailibility(id, availibility){
 	
 	console.log(availibility);
 	if(!availibility){
-		s(`tr[deviceId='${data.id}']`).setAttribute("d", "false");
-		s(`tr[deviceId='${data.id}'] .availibility`).src = "img/icons/x.png";
+		s(`tr[itemId='${data.id}']`).setAttribute("d", "false");
+		s(`tr[itemId='${data.id}'] .availibility`).src = "img/icons/x.png";
 	}else{
-		s(`tr[deviceId='${data.id}']`).setAttribute("d", "true");
-		s(`tr[deviceId='${data.id}'] .availibility`).src = "img/icons/check.png";
+		s(`tr[itemId='${data.id}']`).setAttribute("d", "true");
+		s(`tr[itemId='${data.id}'] .availibility`).src = "img/icons/check.png";
 	}
 	
 	post(DIR + "device-change-availibility.php", data, () => {});
@@ -62,8 +65,8 @@ export function showControlQuery(availibility) {
 function deleteDevice(id){
 	if (confirm("Deseas eliminarlo?")) {
 		post(DIR + 'device-delete.php', { id }, () => {
-			s("#devices").removeChild(s(`tr[deviceId='${id}']`));
-			if(s("#id input").value == id || s(`tr[deviceId='${id}']`).innerHTML == id){
+			s("#devices").removeChild(s(`tr[itemId='${id}']`));
+			if(s("#id input").value == id || s(`tr[itemId='${id}']`).innerHTML == id){
 				cancelEdit();
 			}
 		});
@@ -130,11 +133,11 @@ function editDevice(id){
 
 function addSingle(device){
 	let tr = document.createElement("tr");
-	tr.setAttribute("deviceId", device.id);
+	tr.setAttribute("itemId", device.id);
 	tr.setAttribute("d", true);
 	s("#devices").appendChild(tr);
 
-	s(`tr[deviceId='${device.id}']`).innerHTML = `
+	s(`tr[itemId='${device.id}']`).innerHTML = `
 		<td>${device.marca}</td> 
 		<td><a class="device-item" href="#disponible">${device.modelo}</a></td>
 		<td>${device.precio}</td>
@@ -142,18 +145,18 @@ function addSingle(device){
 		<td><input type="image" width="16px" height="16px" src="img/icons/delete.png" class="delete" /></td>
 		<td><input type="image" width="16px" height="16px" src="img/icons/edit.png" class="edit" /></td>`;
 
-	s(`tr[deviceId='${device.id}'] .device-item`).addEventListener("click", () => {
-		showControlQuery(s(`tr[deviceId='${device.id}']`).getAttribute("d") == "true" ? true : false);
+	s(`tr[itemId='${device.id}'] .device-item`).addEventListener("click", () => {
+		showControlQuery(s(`tr[itemId='${device.id}']`).getAttribute("d") == "true" ? true : false);
 		cargarConsulta(device.id);
 	});
 
-	s(`tr[deviceId='${device.id}'] .availibility`).addEventListener("click", () => {
-		changeAvailibility(device.id, s(`tr[deviceId='${device.id}']`).getAttribute("d") == "true" ? false : true);
+	s(`tr[itemId='${device.id}'] .availibility`).addEventListener("click", () => {
+		changeAvailibility(device.id, s(`tr[itemId='${device.id}']`).getAttribute("d") == "true" ? false : true);
 	});
 
 	let elements = [
-		{element : `tr[deviceId='${device.id}'] .delete`, functionElement : e => {deleteDevice(e)}},
-		{element : `tr[deviceId='${device.id}'] .edit`, functionElement : e => {editDevice(e)}}
+		{element : `tr[itemId='${device.id}'] .delete`, functionElement : e => {deleteDevice(e)}},
+		{element : `tr[itemId='${device.id}'] .edit`, functionElement : e => {editDevice(e)}}
 	];
 
 	elements.forEach(element => {
@@ -188,14 +191,14 @@ function addDevice(){
 function loadEvents() {
 	s("#availibility").addEventListener("click", () => {
 		let id = s("#id").value;
-		let d = s(`tr[deviceId='${id}']`).getAttribute("d") == "true" ? false : true;
+		let d = s(`tr[itemId='${id}']`).getAttribute("d") == "true" ? false : true;
 		changeAvailibility(id, d);
 		showControlQuery(d);
 	});
 
 	sA(".availibility").forEach(button => {
 		button.addEventListener("click", () => {
-			changeAvailibility(button.parentNode.parentNode.getAttribute("deviceId"), button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
+			changeAvailibility(button.parentNode.parentNode.getAttribute("itemId"), button.parentNode.parentNode.getAttribute("d") == "true" ? false : true);
 		});
 	});
 	
@@ -207,7 +210,7 @@ function loadEvents() {
 	elements.forEach(element => {
 		sA(element.element).forEach(button => {
 			button.addEventListener("click", () => {
-				element.functionElement(button.parentNode.parentNode.getAttribute("deviceId"));
+				element.functionElement(button.parentNode.parentNode.getAttribute("itemId"));
 			});
 		});
 	});
@@ -232,18 +235,18 @@ function showControlDevices() {
 		
 		devices.forEach(device => {
 			for (let i = 0; i < 3; i++) {
-				s(`tr[deviceId='${device.id}']`).appendChild(document.createElement('td'));
+				s(`tr[itemId='${device.id}']`).appendChild(document.createElement('td'));
 			}
 			
 
-			let td = s(`tr[deviceId='${device.id}'] td`);
+			let td = s(`tr[itemId='${device.id}'] td`);
 				
 			if (device.disponible == "1") {
 				td[3].innerHTML = html.availibilityTrue;
-				s(`tr[deviceId='${device.id}']`).setAttribute("d", true);
+				s(`tr[itemId='${device.id}']`).setAttribute("d", true);
 			} else {
 				td[3].innerHTML = html.availibilityFalse;
-				s(`tr[deviceId='${device.id}']`).setAttribute("d", false);
+				s(`tr[itemId='${device.id}']`).setAttribute("d", false);
 			}
 
 			td[4].innerHTML = html.deleteButton;

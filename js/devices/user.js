@@ -1,34 +1,9 @@
 import { s, sA, get, post } from "./../app.js";
 import { getUser } from "../utilities.js";
-import {showControlQuery} from "./root.js";
+import { TableList } from "../contentManager.js";
 
 const DIR = "php/devices/";
 let admin = false;
-
-//Mostrar Dispositivos
-function fetchDevices() {
-	s(".card-img-top").src = "img/noImage.png";
-
-	post(DIR + "device-list.php", { admin }, function (devices) {
-		let template = "";
-
-		devices.forEach(device => {
-			template += `
-					<tr deviceId="${device.id}"> 
-						<td>${device.marca}</td> 
-						<td><a class="device-item" href="#disponible">${device.modelo}</a></td>
-						<td>${device.precio}</td>
-					</tr>`;
-		});
-		s('#devices').innerHTML = template;
-
-		sA(".device-item").forEach(b => {
-			b.addEventListener("click", () => {
-				cargarConsulta(b.parentNode.parentNode.getAttribute("deviceid"));
-			});
-		});
-	});
-}
 
 //cargar la consulta
 export function cargarConsulta(id) {
@@ -59,18 +34,18 @@ s("#close").addEventListener("click", () => {
 	closeSession();
 });
 
+export var tableList = new TableList({id: "modelo", action: () => {}}, DIR, admin);
+
 // Load User
-getUser(range => {
-	if (range > 1) {
+getUser(user => {
+	if (user.range > 1) {
 		admin = true;
 
 		let script = document.createElement("script");
 		script.setAttribute("type", "module");
 		script.src = 'js/devices/root.js';
 		s("body").appendChild(script);
-	}
-
-	fetchDevices();
+	}	
 });
 
 //Search

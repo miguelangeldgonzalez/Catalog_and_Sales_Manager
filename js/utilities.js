@@ -87,11 +87,13 @@ export function confirmPassword(password, passwordConfirmButton){
 //Redirect - True if want to redirect to index when there is no loaded users, false otherwise
 export function getUser(callBack, redirect = true){
     //Add event to close the session
-	s("#close").addEventListener("click", () => {
-		get("php/close.php", r => {
-			window.location = "index.html";
-		});
-	});
+    if(s("#close").length != 0){
+        s("#close").addEventListener("click", () => {
+            get("php/close.php", r => {
+                window.location = "index.html";
+            });
+        });
+    }
 
     get("php/user.php", data => {
         data.range = 0;
@@ -126,7 +128,6 @@ export function getUser(callBack, redirect = true){
                 s("#nav").innerHTML += "<li class='nav-item'><a class='nav-link' href='./employees.html'>Empleados</a></li>";
             }
         }
-
-        callBack(data.range);
+        callBack(data);
     }, true);
 }
