@@ -9,11 +9,15 @@ input[type=date].form-contol::-webkit-calendar-picker-indicator{
     cursor: pointer!important;
 }
 .card .img-add-form{
-    width: 30%;
-    margin: 10px auto;
+    width: 100%;
 }
 form .card{
     margin: 20px;
+    display: inline-block;
+}
+form .images-conteiner div, form .descriptions-conteiner .description div{
+    width: 30%;
+    margin: 3%;
     display: inline-block;
 }
 form .images-conteiner{
@@ -22,6 +26,7 @@ form .images-conteiner{
     width: 98%;
     margin: 1%;
 }
+
 form .descriptions-conteiner{
     display: flex;
     flex-wrap: wrap;

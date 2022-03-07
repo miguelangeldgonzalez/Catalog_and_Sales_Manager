@@ -1,16 +1,26 @@
 <?php
 
-include 'db.php';
+function read_all_files($root = '.'){
+    $files = [];
 
-$result = query("real_state");
+    $actual_dir = array_diff(scandir($root), [".", ".."]);
 
-for($i = 0; $i < count($result); $i++){
-    $user = query("users", "`id` = '". $result[$i]['adviser']."'");
-    $user_fullname = $user[0]['nombres'] . " " . $user[0]['apellidos'];
+    for($i = 2; $i < count($actual_dir); $i++){
+        $actual_dir_path = $root ."/". $actual_dir[$i];
+        print_r($scandir($root));
 
-    $result[$i]['adviser'] = $user_fullname;
+        if(is_dir($actual_dir_path)){
+            $content = read_all_files($actual_dir_path);
+            $files[$actual_dir[$i]] = $content;
+        }else{
+            array_push($files, $actual_dir_path);
+        }
+    }
+
+    return $files;
 }
-
-print_r($result);
+//$files = read_all_files("./../php");
+$files = read_all_files("./../img/real-state-photos/R-2022-03-06_04-11-19/front");
+print_r($files);
 
 ?>

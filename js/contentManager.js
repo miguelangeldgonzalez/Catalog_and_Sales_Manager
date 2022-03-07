@@ -4,8 +4,9 @@ export class TableList{
 	constructor(button, DIR, admin, add = [], ignore = [], doAfterLoad = () => {}){
 		this.rows = [];
 		this.fields = [];
+		this.DIR = DIR;
 		this.doAfterLoad = doAfterLoad;
-		this.queryCard = new QueryCard(DIR);
+		this.queryCard = new QueryCard(this.DIR);
 
 		s('#fields td').forEach(td => {
 			if(td.getAttribute("id") != ""){
@@ -33,7 +34,7 @@ export class TableList{
 			fields: this.fields
 		}
 
-		post(DIR + "list.php", data, items => {
+		post(this.DIR + "list.php", data, items => {
 			items.forEach(item => this.addToList(item));
 			items.forEach(item => this.loadEvent(item.id, button.action));
 
@@ -82,9 +83,11 @@ export class TableList{
 		}
 
 		for(let b = 0; b < buttons.length; b++){
-			let column = document.createElement("td");
-			column.innerText = buttons[b].column;
-			s("#fields").appendChild(column);
+			if(s(`tr input[src='${buttons[b].icon}']`)){
+				let column = document.createElement("td");
+				column.innerText = buttons[b].column;
+				s("#fields").appendChild(column);
+			}
 
 			for(let select = 0; select < selection.length; select++){
 				this.loadButton(buttons[b], selection[select]);
@@ -203,7 +206,107 @@ export class DragHandler{
 			}else{
 				this.toElement.parentNode.appendChild(this.moveElement);
 			}
-
 		});
+	}
+}
+
+export class AddPanel{
+	constructor(addForm, imageHandler, tableList, buttons, userData){
+		this.buttons = buttons;
+		this.addForm = s(addForm);
+		this.tableList = tableList;
+		this.DIR = this.tableList.DIR;
+		this.imageHandler = s(imageHandler);
+		this.dragHandler = new DragHandler("#image-add-handler");
+
+		this.addForm.addEventListener("submit", e => {
+			e.preventDefault();
+
+			let images = {
+				front: this.getImagesId("front"),
+				back: this.getImagesId("back"),
+				sides: this.getImagesId("sides"),
+				others: this.getImagesId("others")
+			};
+			
+			let data = {
+				images: JSON.stringify(images),
+				adviser: userData.id
+			}
+
+			postForm(this.DIR + "add.php", s("#add"), real_state_added => {
+				console.log(real_state_added);
+
+				this.tableList.addToList(real_state_added);
+				this.tableList.addButtons(this.buttons, [real_state_added.id]);
+
+				s("#image-add-handler").style.display = "none";
+				s("#add").reset();
+				
+				sA("#image-add-handler img").forEach(img => {
+					img.parentNode.remove();
+				});
+
+			}, true, data);
+		})
+
+		this.imageHandler.oninput = () => {
+			let last = undefined;
+			let images = sA("#image-add-handler img");
+
+			if(images.length != 0){
+				let identifiers = [];
+				images.forEach(image => {
+					identifiers.push(parseInt(image.getAttribute("src").split("_")[1]));
+				});
+	
+				last = Math.max(...identifiers) + 1;
+			}
+
+			postForm(this.DIR + "load-temporal-add-images.php", s("#form-add-images"), images => {
+				images.forEach(image => {
+					this.addCardImage(image.id, image.format);
+				})
+
+				s("#image-add-handler").style.display = "block";
+				
+				sA(".deleteImage").forEach(input => {
+					input.addEventListener("click", e => {
+						let data = {
+							source: e.target.getAttribute("source")
+						}
+
+						post(this.DIR + "delete-temporal-image.php", data, response => {
+							e.target.parentNode.remove();
+						}, false)
+					})
+				})
+			}, true, {last})
+		}
+	}
+
+	getImagesId(type){
+		let identifiers = [];
+
+		if(!!sA(`#${type} img`)){
+			sA(`#${type} img`).forEach(img => {
+				let source = img.getAttribute("src");
+				identifiers.push({
+					id: source.split("_")[1],
+					type: source.split("_")[2]
+				});
+			});
+		}
+		return identifiers;
+	}
+
+	addCardImage(id, format){
+		let template = `
+			<div>
+				<input type="button" class="deleteImage" style="position: absolute; background: transparent; border-color: transparent" value="X" source='${id}_${format}'/>
+				<img src='img/tmpImageMultiple_${id}_${format}' class='card-img-top img-add-form' draggable='true'>
+			</div>`;
+
+		s(".images-conteiner").innerHTML += template;
 	}
 }

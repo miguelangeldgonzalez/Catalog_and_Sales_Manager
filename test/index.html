@@ -5,85 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drag and Drop (2)</title>
     <style>
-        div{
-            width: 300px;
-            height: 300px;
-            margin: 2px;
-            border: 1px solid black;
+        .conteiner{
+            width: 30%;
+            margin: 0 auto;
         }
-        #conteiner{
+        .carrousel{
+            width: 90%;
+            overflow: hidden;
+        }
+        .carrousel .grande{
             display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: center;
+            transition: .25s;
         }
-        .circle{
-            border-radius: 100%;
-            width: 50px;
-            height: 50px;
-            background-color: red;
+        .puntos{
+            width: 100%;
+            padding: 1em;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: center;
         }
-        input{
-        position: absolute;
-        width: 100px;
-        left: 8px;
-        height: 15px;
-        z-index: -1;
-        border-right-color: transparent;
-        }
-        select{
-        width: 130px;
-        height: 21px;
-        z-index: 0;
+        .punto{
+            width: 2em;
+            height: 2em;
+            background-color: blue;
+            margin: 1em;
         }
     </style>
 </head>
 <body>
-    <div id="conteiner">
-        <div id="end"></div>
-        <div id="start">
-            <div class="circle" style="background-color: blue;" draggable="true"></div>
-            <div class="circle" draggable="true"></div>
+    <div class="conteiner">
+        <div class="carrousel">
+            <div class="grande">
+                <img src="../img/noImageProfile.png" alt="">
+                <img src="../img/noImage.png" alt="">
+                <img src="../img/noImageProfile.png" alt="">
+            </div>
+        </div>
+
+        <div class="botones">
+            <button class="atras">Atrás</button>
+            <button class="adelante">Adelante</button>
         </div>
     </div>
 
-    <select>
-        <option>1</option>
-        <option>2</option>
-        <option>Otro... </option>
-    </select>
-    <input type="text" placeholder="Otro..." id="other-text">
-
     <script>
-        let otherText = document.querySelector("#other-text");
-        let select = document.querySelector("select");
+        const grande = document.querySelector(".grande");
 
-        select.addEventListener("change", () => {
-            if(select.value == "Otro..."){
-                otherText.style.zIndex = 0 + "";
-            }else{
-                otherText.style.zIndex = -1 + "";
+        var cantidadImagenes = document.querySelectorAll(".grande img").length;
+        
+        var porcentajeMovimiento = (1 / cantidadImagenes) * 100;
+        var posicion = 0;
+
+        document.querySelector(".carrousel .grande").style.width = (cantidadImagenes * 100) + "%";
+
+        document.querySelectorAll(".carrousel img").forEach(img => {
+            img.style.width = `calc(100% / ${cantidadImagenes})`;
+        });
+
+
+        document.querySelector(".adelante").addEventListener("click", () => {
+            if(posicion > -((cantidadImagenes - 1) * porcentajeMovimiento)){
+                posicion -= porcentajeMovimiento;
+                grande.style.transform = `translateX(${posicion}%)`;
             }
         });
 
-        class DragHandler{
-            constructor(element){
-                this.conteiner = document.querySelector(element);
-
-                this.moveElement = undefined;
-                this.toElement = undefined;
-
-                conteiner.addEventListener("dragstart", e => { this.moveElement = e.target });
-
-                conteiner.addEventListener("dragover", e => { 
-                    e.preventDefault();
-                    this.toElement = e.target; 
-                });
-
-                conteiner.addEventListener("drop", e => {
-                    this.toElement.appendChild(this.moveElement); 
-                });
+        document.querySelector(".atras").addEventListener("click", () => {
+            if(posicion < 0){
+                posicion += porcentajeMovimiento;
+                grande.style.transform = `translateX(${posicion}%)`;   
             }
-        }
+        });
 
-        new DragHandler("#conteiner");
+        fetch("./files.php")
+            .then(r => r.text())
+            .then(response => {
+                console.log(response);
+            });
     </script>
 </body>
 </html>
