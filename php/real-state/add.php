@@ -13,15 +13,10 @@ mkdir(REAL_STATE_PATH.$_POST['id'], 0777, true);
 
 $images = json_decode($_POST['images']);
 
-foreach($images as $key => $image){
-    $dir = REAL_STATE_PATH.$_POST['id']."\\".$key."\\";
-    mkdir($dir);
+for($i = 0; $i < count($images); $i++){
+    $image_name = "tmpImageMultiple_".$images[$i];
 
-    for($i = 0; $i < count($image); $i++){
-        $image_name = "tmpImageMultiple_".$image[$i]->id."_".$image[$i]->type;
-        
-        rename(ROOT_PATH."\..\img\\".$image_name, ROOT_PATH."\..\img\\real-state-photos\\".$_POST['id']."\\".$key."\\".$i."_".$image[$i]->type);
-    }
+    rename(ROOT_PATH."\..\img\\".$image_name, ROOT_PATH."\..\img\\real-state-photos\\".$_POST['id']."\\image_".$images[$i]);
 }
 
 insert("real_state");

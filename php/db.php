@@ -65,7 +65,6 @@
 		while($fila = mysqli_fetch_assoc($result)){
 			if(array_key_exists($fila['Field'], $_POST)){
 				if(!in_array($fila['Field'], $ignore)){
-					print_r($fila['Field'] . " || ");
 					$values .= "`". $fila['Field']."` = '". $_POST[$fila['Field']] . "', ";
 				}
 			}

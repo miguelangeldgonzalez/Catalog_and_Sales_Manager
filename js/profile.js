@@ -127,7 +127,7 @@ function loadUser() {
         }
 
         if(user == undefined){
-            user = response[0];
+            user = response;
 
             let add = "";
             let nav = s("#nav").innerHTML;

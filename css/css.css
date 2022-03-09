@@ -15,34 +15,29 @@ form .card{
     margin: 20px;
     display: inline-block;
 }
-form .images-conteiner div, form .descriptions-conteiner .description div{
-    width: 30%;
-    margin: 3%;
+#image-add-handler, #image-edit-handler{
     display: inline-block;
 }
-form .images-conteiner{
-    text-align: center;
+#image-add-handler div, #image-edit-handler div{
     display: inline-block;
-    width: 98%;
-    margin: 1%;
-}
-
-form .descriptions-conteiner{
-    display: flex;
-    flex-wrap: wrap;
-    width: 98%;
-    margin: 1%;
-}
-.card .descriptions-conteiner .description{
-    border: 1px solid rgba(0, 0, 0, .125);
-    display: inline-block;
-    margin: 1% 2.2%;
+    margin: 0 2%;
     width: 45%;
-    min-height: 150px;
-    text-align: center;
 }
 .descriptions-conteiner h4, .images-conteiner h4{
     color: #55595c;
     width: 100%;
     margin-top: 10px;
+}
+
+
+.carrousel-conteiner{
+    width: 100%;
+    overflow: hidden;
+}
+.carrousel-conteiner .carrousel{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    transition: .25s;
 }

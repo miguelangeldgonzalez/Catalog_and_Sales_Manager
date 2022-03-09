@@ -16,8 +16,19 @@ for($i = 0; $i < count($fields); $i++){
     }
 }
 
-$result = query("devices", "", $selection);
+session_start();
+
+$cargo = query("users", "`username` = '".$_SESSION['username']."'", "cargo")[0]['cargo'];
+
+$condition  = "";
+
+if($cargo == "Asesor"){
+    $condition = "`disponible` = '1'";
+}
+
+$result = query("devices", $condition);
 
 echo json_encode($result);
+
 
 ?>

@@ -1,14 +1,19 @@
-import { s, sA, post } from "./../app.js";
+import { s, sA, post, get } from "./../app.js";
 import { TableList, AddPanel } from "../contentManager.js";
 import { getUser } from "../utilities.js";
 
 const DIR = "php/real-state/";
-let admin = false;
+var admin = false;
+var addPanel = undefined;
 
 var buttons = [{
 	column: "Editar",
 	icon: "img/icons/edit.png",
 	action: edit
+},{
+	column: "Eliminar",
+	icon: "img/icons/delete.png",
+	action: deleteItem
 }];
 
 function loadMap(id){
@@ -20,33 +25,117 @@ function loadMap(id){
 export var tableList = new TableList({id: "cost", action: loadMap}, DIR, admin, ['loaction']);
 
 function edit(id){
-	tableList.queryCard.loadQuery(id, tableList.queryCard.changeToEdition(id, ['adviser']));
+	tableList.queryCard.loadQuery(id, (id, item) => {
+		get(DIR + "get_all_users.php", users => {
+			var actualValue = s(".adviser-select").value;
+
+			let template = "";
+			users.forEach(userOption => {
+				if(userOption.id != actualValue){
+					var fullname = userOption.nombres + " " + userOption.apellidos;
+					template += `<option value='${userOption.id}'>${fullname}</option>`;
+				}
+			});
+			console.log("Edit");
+			s(".adviser-select").innerHTML += template;
+
+			let location = s("#location");
+	
+			location.style.display = "block";	
+
+			let noEdit = [];
+			if(!admin){
+				noEdit[0] = 'adviser';
+			}
+
+			tableList.queryCard.changeToEdition(id, noEdit);
+			loadMap(id);
+
+			if(item.foto != null){
+				if(Object.values(item.foto) != undefined){
+					let images = Object.values(item.foto);
+					for(let i = 0; i < images.length; i++){
+						addPanel.addCardImage(`img\\real-state-photos\\${item.id}\\${images[i]}`, "#image-edit-handler", false);
+					}
+				}
+			}
+
+			s("#form-edit-image").style.display = "block";
+
+			addPanel.loadTemporalImages(s("#edit-image"), "#image-edit-handler", "#form-edit-image", true);	
+
+			addPanel.tableList.queryCard.editControl.onchange = () => {
+				if(addPanel.tableList.queryCard.editControl.style.display == "none"){
+					s("#image-add-handler").style.display = 'none';
+				}
+			}
+
+			addPanel.tableList.queryCard.onCancelEdition = () => {
+				s("#map").innerHTML = "";
+				location.style.display = "none";
+				s("#image-edit-handler").innerHTML = "";
+
+				
+			}
+
+			addPanel.tableList.queryCard.onSubmitEdition = response => {
+				let add = {location: location.value, images: []};
+
+				sA(".temporal").forEach(img => {
+					add.images.push(img.getAttribute("src"));
+				});
+
+				add.images = add.images.toString(); 
+
+				s("#map").innerHTML = "";
+				location.style.display = "none";
+				s("#image-edit-handler").innerHTML = "";
+
+				return add;
+			}
+
+			}, true);
+	});
+}
+
+function deleteItem(id){
+	if(confirm("Confirme que desea eliminar este registro.")){
+		s(`tr[itemid="${id}"]`).remove();
+	
+		post(DIR + "delete.php", {id}, response => {
+			if(response == 1){
+				alert("El registro se ha elimindo exitosamente");
+			}
+		}, false);
+	}
 }
 
 function loadButtons(userName){
 	let selection = [];
-	sA("#table-list tr > td:nth-child(4)").forEach(name => {
-		if(name.innerText == userName){
-			selection.push(name.parentNode.getAttribute("itemId"));
-		}
-	});
+
+	if(!admin){
+		sA("#table-list tr > td:nth-child(4)").forEach(name => {
+			if(name.innerText == userName){
+				selection.push(name.parentNode.getAttribute("itemId"));
+			}
+		});
+	}
 
 	tableList.addButtons(buttons, selection);
 }
 
 // Load User
 getUser(user => {
-	if (user.range > 1) {
+	if (user.range > 2) {
 		admin = true;
 
-		/*let script = document.createElement("script");
-		script.setAttribute("type", "module");
-		script.src = 'js/real-state/root.js';
-		s("body").appendChild(script);*/
-
-		loadButtons(user.nombres + " " + user.apellidos);
-		new AddPanel("#add", "#add-images", tableList, buttons, user);
+		s(".adviser-input").remove();
+	}else{
+		s(".adviser-select").remove();
 	}
+
+	loadButtons(user.nombres + " " + user.apellidos);
+	addPanel = new AddPanel("#add", "#add-images", tableList, buttons, user);
 });
 
 //Search

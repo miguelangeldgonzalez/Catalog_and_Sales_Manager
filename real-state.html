@@ -51,9 +51,19 @@
 					<div class="card-body">
 						<img class="card-img-top" id="query-image" src="img/noImage.png">
 
+						<div class="carrousel-conteiner">
+							<div class="carrousel">
+								
+							</div>
+						</div>
+
+						<button class="back">Back</button>
+						<button class="front">Front</button>
+
 						<form enctype="multipart/form-data" class="w-75 my-2" id="form-edit-image" style="display: none;" method="POST">
 							<label>Cambiar Foto</label>
-							<input class="btn btn-primary" type="file" name="edit-image[]" id="edit-image" multiple>
+
+							<input class="btn btn-primary" type="file" name="images[]" id="edit-image" multiple>
 						</form>
 
 						<form id="edit">
@@ -93,7 +103,8 @@
 								<tr>
 									<td class="table-dark">Asesor</td>
 									<td>
-										<input type="text" class="form-control form-edit" name="adviser" readonly="true">
+										<input type="text" class="form-control form-edit adviser-input" name="adviser" readonly="true">
+										<select class="form-control form-edit adviser-select" name="adviser" readonly="true"></select>
 									</td>
 								</tr>
 								<tr>
@@ -113,13 +124,16 @@
 			</div>
 
 			<div class="col-md-7">
+				<div class="location">
+					<div class="form-floating" id="location" style="display: none">
+						<label>Ubicación</label>
+						<input type="text" class="form-control form-edit" name="location" >
+					</div>
 
-				<div class="d-flex" id="map"></div>
-
-				<div class="d-flex justify-content-start p-2">
-					<input type="search" id="search" class="form-control w-50" placeholder="Search Task">
-					<button type="submit" class="btn btn-success">Search</button>
+					<div class="d-flex" id="map"></div>
 				</div>
+
+				<div id="image-edit-handler" class="card"></div>
 
 				<div class="card my-4" id="search-result" style="display: none;">
 					<div class="card-body">
@@ -158,25 +172,9 @@
 								</div>
 							</div>
 
-							<div id="image-add-handler" style="display: none" class="card">
-								<div class="card images-conteiner">
-									<h4>Images Cargadas</h4>
-								</div>
-
-								<div class="descriptions-conteiner">
-									<div class="description" id="front">
-										<h4>Frontal</h2>
-									</div>
-									<div class="description" id="sides">
-										<h4>Laterales</h2>
-									</div>
-									<div class="description" id="back">
-										<h4>Traseras</h2>
-									</div>
-									<div class="description" id="others">
-										<h4>Otras</h2>
-									</div>
-								</div>
+							<div id="image-add-handler" style="display: none; border: none" class="card">
+								<h4>Images Cargadas</h4>
+								
 							</div>
 						</form>
 						
@@ -189,7 +187,7 @@
 									<div class="form-floating">
 										<label>Precio</label>
 										<div class="input-group">
-												<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost">
+												<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost" required>
 												<span class="input-group-text" id="basic-addon1">$</span>
 										</div>
 									</div>
@@ -199,7 +197,7 @@
 									<div class="form-floating">
 										<label>Habitaciones</label>
 											<div class="input-group">
-												<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="rooms">
+												<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="rooms" required>
 											</div>
 									</div>
 								</div>
@@ -208,7 +206,7 @@
 									<div class="form-floating">
 										<label>Baños</label>
 											<div class="input-group">
-												<input type="text" class="form-control" name="bathrooms" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+												<input type="text" class="form-control" name="bathrooms" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" required>
 											</div>  
 										</div>
 									</div>
@@ -231,7 +229,7 @@
 										<div class="form-floating">
 											<label>Metros Cuadrados</label>
 											<div class="input-group">
-													<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="square_meters">
+													<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="square_meters" required>
 													<span class="input-group-text" id="basic-addon1">mts²</span>
 											</div>
 										</div>
@@ -246,7 +244,7 @@
 										<div class="form-floating">
 											<label>Principio del Contrato de Captación</label>
 											<div class="input-group">
-												<input type="date" stye="cursor:text"class="form-control" name="start_catchment_contract">
+												<input type="date" stye="cursor:text"class="form-control" name="start_catchment_contract" required>
 											</div>
 										</div>
 									</div>
@@ -255,7 +253,7 @@
 										<div class="form-floating">
 											<label>Fin del Contrato de <br>Captación</label>
 											<div class="input-group">
-												<input type="date" stye="cursor:text"class="form-control" name="end_catchment_contract">
+												<input type="date" stye="cursor:text"class="form-control" name="end_catchment_contract" required>
 											</div>
 										</div>
 									</div>
@@ -268,14 +266,14 @@
 									<div class="col-md">
 										<div class="form-floating">
 											<label>Nombre del Propietario</label>
-												<input type="text" placeholder="Nombre y Apellido" class="form-control" name="owner">                                
+												<input type="text" placeholder="Nombre y Apellido" class="form-control" name="owner" required>                                
 										</div>
 									</div>
 				
 									<div class="col-md">
 										<div class="form-floating">
 											<label>Número del Propietario</label>
-												<input type="number" class="form-control" name="owner_phone">
+												<input type="number" class="form-control" name="owner_phone" required>
 										</div>
 									</div>
 								</div>
