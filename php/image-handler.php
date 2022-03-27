@@ -53,7 +53,7 @@ function loadTemporalImage($file_name, $multiple = false, $last = 0){
     if(!$multiple){
         if(checkImage($file['type'], $file['size']) == 1){
             deleteTemporalImage();
-            move_uploaded_file($file['tmp_name'], "../img/tmpImage".getFormat($file['type']));
+            move_uploaded_file($file['tmp_name'], ROOT_PATH."\..\img\\tmpImage_0_".getFormat($file['type']));
             array_push($file_data, getFormat($file['type']));
         }
     }else{

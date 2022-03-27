@@ -107,7 +107,7 @@ export function getUser(callBack, redirect = true){
  
             switch(data.cargo){
                 case "Control":
-                case "Gerencia":
+                case "Gerente":
                     data.range = 3;
                     break;
                 case "Administracion":
@@ -124,8 +124,11 @@ export function getUser(callBack, redirect = true){
             //Control, managment and adminsitration permission
             let url = window.location.pathname.split("/");
             url = url[url.length - 1];
-            if(data.range > 1 && !!s("#nav") && url != "employees.html"){
-                s("#nav").innerHTML += "<li class='nav-item'><a class='nav-link' href='./employees.html'>Empleados</a></li>";
+            
+            if(data.range > 1 && !!s("#nav") && (url != "employees.html" && url != "sells.html")){
+                s("#nav").innerHTML += `<li class='nav-item'><a class='nav-link' href='./employees.html'>Empleados</a></li><li class='nav-item'><a class='nav-link' href='./sales.html'>Ventas</a><ul class="navbar-nav submenu">
+                <li class="nav-item" aria-current="true"><a class="nav-link" href="sales-report.html">Reporte de Ventas</a></li>
+                </ul></li>`;
             }
         }
         callBack(data);

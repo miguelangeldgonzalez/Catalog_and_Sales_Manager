@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/css.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav" id="nav">
+				<li class="nav-item">
+					<a class="nav-link" aria-current="true" href="profile.html" id="title"></a>
+				</li>
+
+				<li class="nav-item" aria-current="true">
+					<a href="#" class="nav-link">Catálogo</a>
+
+					<ul class="navbar-nav submenu">
+						<li class="nav-item" aria-current="true"><a class="nav-link" href="real-state.html">Inmuebles</a></li>
+						<li class="nav-item" aria-current="true"><a class="nav-link" href="devices.html">Dispositivos</a> </li>
+					</ul>
+
+				</li>
+
+			</ul>
+		</div>
+
+
+		<ul class="navbar-bar ml-auto">
+			<form class="form-inline my-2 my-lg-0">
+				<input type="button" class="btn btn-danger" value="Cerrar Sesion" id="close">
+			</form>
+		</ul>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+
+			<div class="col-md-8" style="margin-top: 2rem">
+				<canvas id="graph"></canvas>
+			</div>
+
+			<div class="col-md-2"></div>
+			<div class="col-md-2"></div>
+			
+			<div class="col-md-8" style="margin-top: 2rem">
+				<canvas id="graph2"></canvas>
+			</div>
+		</div>
+	</div>
+	<script src="js/chartjs.js"></script>
+    <script type="module" src="js/salesReport.js"></script>
+</body>
+</html>

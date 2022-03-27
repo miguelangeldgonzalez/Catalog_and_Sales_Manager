@@ -1,4 +1,4 @@
-import {s, sA, post, postForm} from "./app.js";
+import {s, sA, post, postForm, get} from "./app.js";
 
 export class TableList{
 	constructor(button, DIR, admin, add = [], ignore = [], doAfterLoad = () => {}){
@@ -60,7 +60,7 @@ export class TableList{
 			if(i != this.buttonPosition){
 				template += `<td>${item[this.fields[i]]}</td>`;
 			}else{
-				template += `<td><a class="item_${this.fields[i]}">${item[this.fields[i]]}</a></td>`;
+				template += `<td><a style="cursor:pointer;" class="item_${this.fields[i]}">${item[this.fields[i]]}</a></td>`;
 			}
 		}	
 		template += `</tr>`;
@@ -71,30 +71,31 @@ export class TableList{
 	
 	loadEvent(id){
 		s(`tr[itemId='${id}'] a`).addEventListener("click", () => {
-			this.queryCard.loadQuery(id, this.button.action);
+			this.queryCard.loadQuery(id, this.button.action, false);
 		});
 	}
 
-	addButtons(buttons, selection = []){	
-		if(selection.length == 0){
-			s("#table-list tr").forEach(tr => {
-				selection.push(tr.getAttribute('itemId'));
-			});
-		}
-
-		for(let b = 0; b < buttons.length; b++){
-			if(sA(`tr input[src='${buttons[b].icon}']`).length == 0){
-				let column = document.createElement("td");
-				column.innerText = buttons[b].column;
-				s("#fields").appendChild(column);
-			}else{
-				console.log("si existe");
+	addButtons(buttons, selection = [], admin = false){	
+		if(selection.length != 0 || admin){
+			if(admin){
+				s("#table-list tr").forEach(tr => {
+					selection.push(tr.getAttribute('itemId'));
+				});
 			}
 
-			for(let select = 0; select < selection.length; select++){
-				this.loadButton(buttons[b], selection[select]);
+			for(let b = 0; b < buttons.length; b++){
+				if(sA(`tr input[src='${buttons[b].icon}']`).length == 0){
+					let column = document.createElement("td");
+					column.innerText = buttons[b].column;
+					s("#fields").appendChild(column);
+				}
+	
+				for(let select = 0; select < selection.length; select++){
+					this.loadButton(buttons[b], selection[select]);
+				}
 			}
 		}
+
 	}
 
 	loadButton(buttonData, id){
@@ -105,6 +106,18 @@ export class TableList{
 		s(`tr[itemId='${id}'] td input[src='${buttonData.icon}']`).addEventListener("click", () => {
 			buttonData.action(id);
 		});
+	}
+
+	updateRow(item){
+		for(let i = 0; i < this.fields.length; i++){
+			let j = i + 1;
+			if(i == this.buttonPosition){
+				s(`tr[itemid='${item.id}'] td:nth-child(${j})`).innerHTML = `<a class="item_${this.fields[i]}">${item[this.fields[i]]}</a>`;
+				this.loadEvent(item.id);
+			}else{
+				s(`tr[itemid='${item.id}'] td:nth-child(${j})`).innerText = item[this.fields[i]];
+			}
+		}
 	}
 }
 
@@ -119,8 +132,11 @@ export class QueryCard {
 		this.editControl = s(".edit-control");
 		this.editControl.style.display = "none";
 		this.changeImageButton = s("#edit-image");
+
+		this.addToSubmit = () => {};
+		this.onLoadQuery = () => {};
 		this.onCancelEdition = () => {};
-		this.onSubmitEdition = () => {};
+		this.onEditionSubmited = () => {};
 
 		this.cardImage.src = "img/noImage.png";
 		s(".edit-control #cancelar").addEventListener("click", () => {
@@ -129,8 +145,6 @@ export class QueryCard {
 	}
 
 	loadCarrousel(images, id){
-		s("#query-image").style.display = "none";
-
 		const carrousel = s(".carrousel");
 
         var numberOfImages = images.length;
@@ -154,6 +168,7 @@ export class QueryCard {
         });
 
 		carrousel.style.transform = `translateX(0%)`;
+		s("#query-image").style.display = "none";
 
 		if(!s(".front").onclick){
 			s(".front").onclick = () => {};
@@ -175,37 +190,42 @@ export class QueryCard {
 		};
 	}
 
-	loadQuery(id, action = () => {}) {
-		post(this.DIR + "single.php", { id }, item => {
-			this.inputs.forEach(input => {
-				input.value = item[input.getAttribute("name")];
-
-				if(input.tagName == "SELECT"){
-					input.innerHTML = `<option value='${item.adviser_id}'>${item[input.getAttribute("name")]}</option>`;
-				}
-			});
-
-			if(item.foto == undefined){
-				s("#query-image").setAttribute("src", `img/noImage.png`);
-			}else{
-				if(typeof item.foto == 'string'){
-					s("#query-image").setAttribute("src", `img/phones/${item.id}${item.foto}`);
+	loadQuery(id, action = () => {}, allowEditing = true) {
+		if((!this.editing && !allowEditing) || (this.editing && allowEditing)){
+			post(this.DIR + "single.php", { id }, item => {
+				this.inputs.forEach(input => {
+					input.value = item[input.getAttribute("name")];
+	
+					if(input.tagName == "SELECT"){
+						input.innerHTML = `<option value='${item.adviser_id}'>${item[input.getAttribute("name")]}</option>`;
+					}
+				});
+	
+				if(item.foto == undefined){
+					s("#query-image").setAttribute("src", `img/noImage.png`);
 				}else{
-					if(Object.values(item.foto).length > 0){
-						this.loadCarrousel(Object.values(item.foto), item.id);
+					if(typeof item.foto == 'string'){
+						s("#query-image").setAttribute("src", `img/phones/${item.id}${item.foto}`);
+					}else{
+						if(Object.values(item.foto).length > 0){
+							this.loadCarrousel(Object.values(item.foto), item.id);
+						}
 					}
 				}
-			}
-			
-            action(id, item);
-		});
+				
+				action(id, item);
+				this.onLoadQuery(id, item);
+			});
+		}else{
+			alert("Debes completar o cancelar la edición para continuar");
+		}
 	}
 
-	changeToEdition(id, noEdit = [], add = undefined){
+	changeToEdition(id, noEdit = [], doAfter = () => {}){
 		this.editing = true;
 		this.editControl.style.display = "block";
 		this.form.reset();
-		this.loadQuery(id);
+		this.loadQuery(id, doAfter);
 		this.changeImageButton.style.display = "block";
 
 		this.inputs.forEach(input => {
@@ -215,23 +235,25 @@ export class QueryCard {
 			}
 		});	
 
-		this.form.addEventListener("submit", e => {
+		this.form.onsubmit = () => {};
+
+		this.form.onsubmit = e => {
 			e.preventDefault();
 			
-			add = this.onSubmitEdition(); 
+			let add = this.addToSubmit(); 
 
-			postForm(this.DIR + "edit.php", this.form, response => {
-				if(response == "1"){
-					alert("Edición correcta");
+			postForm(this.DIR + "edit.php", this.form, item => {
+				if(item.success){
+					alert("Edición realizada con éxito.");
 					this.cancelEdition();
 					this.editing = false;
 				}else{
 					alert("La edición no se pudo completar");
 				}
 
-				console.log(response);
-			}, false, add);	
-		})
+				this.onEditionSubmited(item);
+			}, true, add);	
+		}
 	}
 
 	cancelEdition(){
@@ -286,24 +308,39 @@ export class AddPanel{
 		this.DIR = this.tableList.DIR;
 		this.imageHandler = s(imageHandler);
 
+		if(userData.range > 1){
+			get("php/get_all_users.php", users => {
+				let template = "";
+				users.forEach(userOption => {
+					var fullname = userOption.nombres + " " + userOption.apellidos;
+					template += `<option value='${userOption.id}'>${fullname}</option>`;
+					
+				});
+
+				s(".adviser-add-select").innerHTML += template;
+			}, true);
+		}
+
 		this.addForm.addEventListener("submit", e => {
 			e.preventDefault();
+			let data = {};
 
 			let images = [];
-
-			sA(".images-conteiner img").forEach(img => {
-				images.push(img.getAttribute("src").split("_")[1] + "_" + img.getAttribute("src").split("_")[2] );
+			
+			sA("#image-add-handler img").forEach(img => {
+				images.push(img.getAttribute("src").split("_")[1] + "_" + img.getAttribute("src").split("_")[2]);
 			});
 
-			console.log(images);
-			let data = {
-				images: JSON.stringify(images),
-				adviser: userData.id
+			if(images.length > 0){
+				data.images = JSON.stringify(images);
 			}
+			
+			userData.range < 2 ? data.adviser = userData.id : false;
 
-			postForm(this.DIR + "add.php", s("#add"), real_state_added => {
-				this.tableList.addToList(real_state_added);
-				this.tableList.addButtons(this.buttons, [real_state_added.id]);
+			postForm(this.DIR + "add.php", s("#add"), item => {
+				console.log(item);
+				this.tableList.addToList(item);
+				this.tableList.addButtons(this.buttons, [item.id]);
 
 				s("#image-add-handler").style.display = "none";
 				s("#add").reset();
@@ -311,7 +348,6 @@ export class AddPanel{
 				sA("#image-add-handler img").forEach(img => {
 					img.parentNode.remove();
 				});
-
 			}, true, data);
 		})
 
@@ -323,7 +359,6 @@ export class AddPanel{
 			let last = undefined;
 			let images = sA(placeToLoad + " .temporal");
 			
-			console.log("hola");
 			if(this.tableList.queryCard.editing && !allowEditing){
 				alert("Estas editando, debes completar la edición o cancelarla antes de continuar con esta acción");
 			}else{
@@ -348,24 +383,29 @@ export class AddPanel{
 		
 					last = Math.max(...identifiers) + 1;
 				}
-	
+				
 				postForm(this.DIR + "load-temporal-add-images.php", s(formFromLoad), images => {
-					images.forEach(image => {
-						this.addCardImage(`img\\tmpImageMultiple_${image.id}_${image.format}`, placeToLoad);
-					});
+					if(button.getAttribute("multiple") != null){
+						images.forEach(image => {
+							this.addCardImage(`img\\tmpImageMultiple_${image.id}_${image.format}`, placeToLoad);
+						});
+					}else{
+						this.addCardImage("img\\tmpImage_0_" + images[0], placeToLoad);
+					}
 	
 					s(placeToLoad).style.display = "inline-block";
 					
-					this.loadEventDeleteImge();
+					this.loadEventDeleteImage();
 	
 				}, true, {last})
 			}
 		}
 	}
 
-	loadEventDeleteImge(){
+	loadEventDeleteImage(){
 		sA(".deleteImage").forEach(input => {
-			input.addEventListener("click", e => {
+			input.onclick = () => {};
+			input.onclick = e => {
 				let data = {
 					source: e.target.getAttribute("source")
 				}
@@ -373,7 +413,7 @@ export class AddPanel{
 				post(this.DIR + "delete-temporal-image.php", data, () => {
 					e.target.parentNode.remove();
 				}, false)
-			})
+			}
 		})
 	}
 
@@ -393,6 +433,7 @@ export class AddPanel{
 	}
 
 	addCardImage(source, placeToLoad, temporal = true){
+
 		let template = `
 			<div>
 				<input type="button" class="deleteImage" style="position: absolute; background: transparent; border-color: transparent" value="X" source='${source}'/>

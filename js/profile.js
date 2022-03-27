@@ -132,8 +132,8 @@ function loadUser() {
             let add = "";
             let nav = s("#nav").innerHTML;
     
-            if (user.cargo == "Administracion" || user.cargo == "Gerencia" || user.cargo == "Control") {
-                add = nav + "<li class='nav-item'><a class='nav-link' href='panels/employees/employees.html'>Empleados</a></li>";
+            if (user.cargo == "Administracion" || user.cargo == "Gerente" || user.cargo == "Control") {
+                add = nav + "<li class='nav-item'><a class='nav-link' href='employees.html'>Empleados</a></li>";
             } else {
                 add = nav;
             }

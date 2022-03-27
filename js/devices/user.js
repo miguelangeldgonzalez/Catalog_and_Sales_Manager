@@ -1,26 +1,140 @@
-import { s, sA, get, post } from "./../app.js";
+import { s, get, post, postForm } from "./../app.js";
 import { getUser } from "../utilities.js";
-import { TableList } from "../contentManager.js";
+import { TableList, AddPanel } from "../contentManager.js";
 
 const DIR = "php/devices/";
-let admin = false;
+var admin = false;
+var addPanel = undefined;
 
-//cargar la consulta
-export function cargarConsulta(id) {
-	post(DIR + "device-single.php", { id }, function (device) {
-		let inputs = s(".form-edit");
+var buttons = [{
+	column: "Editar",
+	icon: "img/icons/edit.png",
+	action: edit
+},{
+	column: "Eliminar",
+	icon: "img/icons/delete.png",
+	action: deleteItem
+}];
 
-		inputs.forEach(input => {
-			input.value = device[input.getAttribute("name")];
+class Availibility{
+	constructor(){
+		this.button = s("#availibility");
+		this.availible = 0;
+	}
+
+	hide(){
+		this.button.style.display = "none";
+		this.button.onclick = () => {};
+	}
+
+	show(id){
+		post(DIR + "get_availibility.php", {id}, availibility => {
+			this.button.style.display = "block";
+			this.availible = availibility;
+			availibility == 1 ? this.isAvailible() : this.isNotAvailible();
+
+			this.button.onclick = () => {};
+			this.button.onclick = () => {
+				let data = {
+					id: id,
+					d: availibility == 1 ? 0 : 1
+				}
+
+				post(DIR + "change_availibility.php", data, availibility => {
+					this.show(id);
+				})
+			}
+		})
+	}
+
+	isAvailible(){
+		this.success("Disponible");
+
+		this.button.onmouseover = () => {
+			this.danger("Marcar como no disponible");
+		}
+
+		this.button.onmouseleave = () => {
+			this.success("Disponible");
+		}
+	}
+
+	isNotAvailible(){
+		this.danger("No Disponible");
+		
+		this.button.onmouseover = () => {
+			this.success("Marcar como Disponible");
+		}
+
+		this.button.onmouseleave = () => {
+			this.danger("No Disponible");
+		}
+	}
+
+	success(text){
+		this.button.innerText = text;
+		this.button.classList.add("btn-success");
+		this.button.classList.remove("btn-danger");
+	}
+
+	danger(text){	
+		this.button.innerText = text;
+		this.button.classList.add("btn-danger");
+		this.button.classList.remove("btn-success");
+	}
+}
+
+var availibility = new Availibility();
+
+export var tableList = new TableList({id: "modelo", action: () => {} }, DIR, admin);
+
+tableList.queryCard.onLoadQuery = (id, item) => {
+	availibility.show(id);
+}
+
+function deleteItem(id){
+	if(!tableList.queryCard.editing){
+		if(confirm("Confirme que desea eliminar el dispositivo del registro")){
+			post(DIR + "delete.php", {id}, () => {
+				s(`tr[itemid="${id}"]`).remove();
+			})
+		}
+	}else{
+		alert("Debes completar o cancelar la edición para continuar");
+	}
+	
+}
+
+function edit(id){
+	if(!tableList.queryCard.editing){
+		tableList.queryCard.changeToEdition(id, [], (id, item) => {
+			s("#form-edit-image").style.display = "block";
+
+			s("#edit-image").oninput = () => {
+				postForm(DIR + "load_temporal_edit_image.php", s("#form-edit-image"), response => {
+					s("#query-image").setAttribute("src", "img/tmpImage_0_" + response.split("\"")[1]);
+				})
+			}
 		});
 
-		//s("#id").innerHTML = device.id;
-		if (device.foto == undefined) {
-			s(".card-img-top").src = "img/noImage.png";
-		} else {
-			s(".card-img-top").src = "img/phones/" + device.id + device.foto;
+		tableList.queryCard.addToSubmit = () => {
+			let add = {};
+
+			if(s("#query-image").getAttribute("src").split("_")[0] == "img/tmpImage"){
+				add.image = s("#query-image").getAttribute("src").split("_")[2];
+			}
+
+			return add;
 		}
-	});
+
+		tableList.queryCard.onEditionSubmited, tableList.queryCard.onCancelEdition = () =>{
+			s("#query-image").setAttribute("src", "img/noImage.png");
+			s("#form-edit-image").style.display = "none";
+			availibility.hide();
+		}
+	}else{
+		alert("Debes completar o cancelar la edición para editar otro elemento");
+	}
 }
 
 //Cerrar Sesion
@@ -34,61 +148,16 @@ s("#close").addEventListener("click", () => {
 	closeSession();
 });
 
-export var tableList = new TableList({id: "modelo", action: () => {}}, DIR, admin);
-
 // Load User
 getUser(user => {
 	if (user.range > 1) {
 		admin = true;
 
-		let script = document.createElement("script");
-		script.setAttribute("type", "module");
-		script.src = 'js/devices/root.js';
-		s("body").appendChild(script);
+		get("panels/devices/add.html", (e) => {
+			s(".col-md-7 div")[3].innerHTML = e;
+
+			tableList.addButtons(buttons, [], admin);
+			addPanel = new AddPanel("#add", "#add-images", tableList, buttons, user);
+		});
 	}	
-});
-
-//Search
-document.addEventListener("DOMContentLoaded", function () {
-
-	s('#search').addEventListener("keyup", () => {
-		let search = s('#search');
-
-		if (search.value) {
-			search = search.value;
-
-			post(DIR + 'device-search.php', { search }, devices => {
-				let template = '';
-
-				devices.forEach(device => {
-					template += `<li><a deviceId="${device.id}" class="device-search-item" href="#">${device.modelo}</a></li>`;
-				});
-
-				if (devices == '') {
-					s('#container').innerHTML = `No results for the search.`;
-				} else {
-					s("#container").innerHTML = template;
-
-					sA(".device-search-item").forEach(b => {
-						b.addEventListener("click", () => {
-							cargarConsulta(b.getAttribute("deviceId"));
-						});
-					});
-
-					if(admin){
-						sA(".device-search-item").forEach(b => {
-							b.addEventListener("click", () => {
-								let id = b.getAttribute("deviceId");
-								let d = s(`tr[deviceid='${id}']`).getAttribute("d") == "true" ? false : true;
-								showControlQuery(d);
-							});
-						});
-					}
-				}
-				s('#search-result').style.display = "block";
-			});
-		} else {
-			s('#search-result').style.display = "none";
-		}
-	});
 });

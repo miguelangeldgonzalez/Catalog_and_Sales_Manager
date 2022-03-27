@@ -4,6 +4,7 @@
 <head>
 	<title>Catálogo</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/css.css">
 	<meta charset="UTF-8">
 	<style>
 		.table-stripped {
@@ -29,8 +30,14 @@
 					<a class="nav-link" href="profile.html" id="title"></a>
 				</li>
 
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="true" href="#">Dispositivos</a>
+				<li class="nav-item active" aria-current="true">
+					<a href="#" class="nav-link">Catálogo</a>
+
+					<ul class="navbar-nav submenu">
+						<li class="nav-item" aria-current="true"><a class="nav-link" href="real-state.html">Inmuebles</a></li>
+						<li class="nav-item active" aria-current="true"><a class="nav-link" href="#">Dispositivos</a> </li>
+					</ul>
+
 				</li>
 			</ul>
 		</div>
@@ -54,6 +61,8 @@
 							<label>Cambiar Foto</label>
 							<input class="btn btn-primary" type="file" name="edit-image" id="edit-image">
 						</form>
+
+						<button type="button" id="availibility" class="btn"></button>
 
 						<form id="edit">
 							<table class="table-stripped table">

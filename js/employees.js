@@ -76,7 +76,6 @@ function fetchEmployees(){
     get(DIR + "employees.php", employees => {
         let template = "";
         employees.forEach(employee => {
-            employee = employee[0];
             template += `
             <tr>
                     <td>${employee.nombres}</td>
@@ -109,8 +108,8 @@ s("#close").addEventListener("click", () => {
 });
 
 //Load User
-getUser(range =>{
-    switch(range){
+getUser(user =>{
+    switch(user.range){
         case 1:
             window.location = "devices.html";
             break;

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/css.css">
+    <style>
+        .card{
+            padding: 1rem;
+            margin: 2rem;
+        }
+        div.row.col-md-12{
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav" id="nav">
+				<li class="nav-item">
+					<a class="nav-link" aria-current="true" href="profile.html" id="title"></a>
+				</li>
+
+				<li class="nav-item" aria-current="true">
+					<a href="#" class="nav-link">Catálogo</a>
+
+					<ul class="navbar-nav submenu">
+						<li class="nav-item" aria-current="true"><a class="nav-link" href="real-state.html">Inmuebles</a></li>
+						<li class="nav-item" aria-current="true"><a class="nav-link" href="devices.html">Dispositivos</a> </li>
+					</ul>
+
+				</li>
+			</ul>
+		</div>
+
+
+		<ul class="navbar-bar ml-auto">
+			<form class="form-inline my-2 my-lg-0">
+				<input type="button" class="btn btn-danger" value="Cerrar Sesion" id="close">
+			</form>
+		</ul>
+	</nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-8">
+                <div class="card">
+                    <h2 class="card-title">Ingresar Venta</h2>
+
+                    <div >
+                        <p class="card-text">Cuando consulta las características de un dispositivo o de un inmueble, en la tarjeta de información hay un campo llamado "id". Parar registrar una venta copie el id del dispositivo o del inmueble que se vendió y pegueló en el recuadro que dice "ID Producto Vendido" luego presione buscar.</p>
+                    </div>
+                </div> 
+
+                <div style="display: flex; width: 100%">
+                    <div class="form-floating" style="margin: 0 auto;">
+                        <label>ID Producto Vendido</label>
+                        <div class="input-group">
+                            <input type="text" id="search-input" placeholder="Ejemplo: R-R-2022-02-14_15-41-04" class="form-control w-50">
+                            <input type="button" id="search" class="btn btn-success" value="Buscar">
+                        </div>
+                    </div>
+                </div>
+
+                <form id="real-state-sell-form" style="display: none;">
+                    <div class="row" id="real-state-sell" style="margin-top: 2rem; padding-bottom: 2rem">
+
+                        <!-- Catchment Adviser -->
+						<div class="row col-md-12">
+				
+							<div class="col-md">
+								<div class="form-floating">
+									<label>Asesor Captador</label>
+									<input type="text" class="form-control" id="catchment_adviser" readonly="true">
+								</div>
+							</div>
+					
+							<div class="col-md">
+								<div class="form-floating">
+									<label>Comisión por Captación</label>
+									<div class="input-group">
+										<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="catchment_adviser_comission" required>
+                                    <span class="input-group-text" id="basic-addon1">%</span>
+									</div>
+								</div>
+							</div>
+
+                            <div class="col-md">
+								<div class="form-floating">
+									<label>Precio de Captación</label>
+									<div class="input-group">
+										<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost" readonly="true">
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+
+									</div>
+								</div>
+							</div>
+                        </div>
+
+                        <!-- Sell Adviser -->
+						<div class="row col-md-12">
+				
+							<div class="col-md">
+								<div class="form-floating">
+									<label>Asesor Vendedor</label>
+									<select class="form-control" name="sell_adviser" required></select>
+								</div>
+							</div>
+					
+							<div class="col-md">
+								<div class="form-floating">
+									<label>Comisión por Venta</label>
+									<div class="input-group">
+										<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="sell_adviser_comission" required>
+                                        <span class="input-group-text" id="basic-addon1">%</span>
+									</div>
+								</div>
+							</div>
+
+                            <div class="col-md">
+								<div class="form-floating">
+									<label>Precio de Venta</label>
+									<div class="input-group">
+										<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="sell_cost" required>
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+
+									</div>
+								</div>
+							</div>
+                        </div>
+
+                        <!-- date, description -->
+						<div class="row col-md-12">
+                            <div class="col-md">
+								<div class="form-floating">
+									<label>Fecha de Venta</label>
+									<div class="input-group">
+										<input type="date" class="form-control" name="date" required>
+									</div>
+								</div>
+							</div>
+
+                            <div class="col-md">
+								<div class="form-floating">
+									<label>Comisión de Venta</label>
+									<div class="input-group">
+										<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="comission" readonly>
+                                    <span class="input-group-text" id="basic-addon1">%</span>
+									</div>
+								</div>
+							</div>
+
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <label>Descripción</label>
+                                    <textarea name="description" class="form-control" required></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row col-md-12">
+                           <div class="col-md"></div>
+                           <div class="col-md">
+                               <input type="submit" class="btn btn-success" value="Enviar">
+                               <input type="button" class="btn btn-danger" value="Cancelar" id="real-state-cancel">
+                           </div>
+                        </div>
+
+                    </div>
+                </form>
+
+                <form id="devices-sell-form" style="display: none;">
+                    <div class="row" id="devices-sell" style="margin-top: 2rem; padding-bottom: 2rem">
+
+                        <!-- Sell Adviser -->
+						<div class="row col-md-12">
+				
+							<div class="col-md">
+								<div class="form-floating">
+									<label>Asesor Vendedor</label>
+									<select class="form-control" name="adviser" required></select>
+								</div>
+							</div>
+					
+							<div class="col-md">
+								<div class="form-floating">
+									<label>Dispositivo</label>
+									<input class="form-control" id="device" readonly="true">
+								</div>
+							</div>
+                        </div>
+
+                        <!-- cost, sell cost and date -->
+						<div class="row col-md-12">
+					
+							<div class="col-md">
+								<div class="form-floating">
+									<label>Precio de Venta</label>
+									<div class="input-group">
+										<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="cost" readonly="true">
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+									</div>
+								</div>
+							</div>
+
+                            <div class="col-md">
+								<div class="form-floating">
+									<label>Comisión de Venta</label>
+									<div class="input-group">
+										<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="comission" required>
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+									</div>
+								</div>
+							</div>
+
+                            <div class="col-md">
+								<div class="form-floating">
+									<label>Fecha de Venta</label>
+									<input type="date" name="date" class="form-control" required>
+								</div>
+							</div>
+                        </div>
+
+                        <div class="row col-md-12">
+                            <div class="col-md"></div>
+                            <div class="col-md">
+                                <input type="submit" class="btn btn-success" value="Enviar">
+                                <input type="button" class="btn btn-danger" value="Cancelar" id="device-cancel">
+                            </div>
+                         </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 2rem;">
+            <div class="col-md-4"></div>
+
+            <div class="col-md-4">
+                <input type="button" class="btn btn-info" id="change-real-state" value="Inmuebles">
+                <input type="button" class="btn btn-light" id="change-devices" value="Dispositivos">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered my-4" id="table-real-state-sells">
+					<thead>
+						<tr>
+							<td id="catchment_adviser">Asesor Capatador</td>
+							<td id="sell_adviser">Asesor Vendedor</td>
+							<td id="catchment_adviser_comission">Commisión Captador</td>
+							<td id="sell_adviser_comission">Comisión Vendedor</td>
+							<td id="cost">Precio</td>
+							<td id="sell_cost">Precio Venta</td>
+							<td id="description">description</td>
+                            <td>Eliminar</td>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered my-4" id="table-devices-sells" style="display: none">
+					<thead>
+						<tr>
+							<td id="adviser">Asesor</td>
+							<td id="device">Dispositivo</td>
+							<td id="cost">Precio</td>
+							<td id="comission">Comision</td>
+                            <td>Eliminar</td>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="js/sales.js"></script>
+</body>
+</html>

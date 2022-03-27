@@ -35,8 +35,38 @@
             margin: 1em;
         }
     </style>
+    <link rel="stylesheet" href="css.css">
+    <script src="../js/chartjs.js"></script>
 </head>
 <body>
+    <header>
+        <ul class="nav">
+            <li><a href="">Inicio</a></li>
+            <li>
+                <a href="">Servicio</a>
+                <ul>
+                    <li><a href="">Submenu</a></li>
+                    <li><a href="">Submenu</a></li>
+                    <li><a href="">Submenu</a></li>
+                </ul>
+            </li>
+            <li><a href="">Acerca de</a></li>
+            <li>
+                <a href="">Servicio</a>
+                <ul>
+                    <li><a href="">Submenu</a></li>
+                    <li><a href="">Submenu</a></li>
+                    <li><a href="">Submenu</a></li>
+                </ul>
+            </li>
+            <li><a href="">Acerca de</a></li>
+        </ul>
+    </header>
+    <div style="width: 200px; height: 200px">
+        <canvas id="grafica" width="200" height="200"></canvas>
+
+    </div>
+
     <div class="conteiner">
         <div class="carrousel">
             <div class="grande">
@@ -45,6 +75,8 @@
                 <img src="../img/noImageProfile.png" alt="">
             </div>
         </div>
+
+        
 
         <div class="botones">
             <button class="atras">Atrás</button>
@@ -97,5 +129,6 @@
                 //console.log(response);
             });
     </script>
+    <script src="user.js" type="module"></script>
 </body>
 </html>

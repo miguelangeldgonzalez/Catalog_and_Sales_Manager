@@ -1,6 +1,22 @@
 <div>
     <div class="card">
     <div class="card-body">
+        <!-- Load images -->
+						<form method="POST" id="form-add-images" enctype="multipart/formdata">
+							<div class="row g-3">
+								<div class="col-md">
+									<div class="form-floating" style>
+										<label>Imagen del Dispositivo</label>
+										<input type="file" id="add-images" class="form-control" name="images">                            
+									</div>
+								</div>
+							</div>
+
+							<div id="image-add-handler" style="display: none; border: none" class="card">
+								<h4>Images Cargadas</h4>
+								
+							</div>
+						</form>
         <form id="add" enctype="multipart/form-data" method="POST">
             
             <!-- Marca, Modelo y Precio -->
@@ -85,8 +101,13 @@
                     <div class="col-md">
                         <div class="form-floating">
                             <label>Procesador</label>
+                            <input type="text"class="form-control" placeholder="Nombre" name="procesadorNombre" id="procesadorNombre">
+                        </div>
+                    </div>
+
+                    <div class="col-md" style="margin-top: 30px">
+                        <div class="form-floating">
                             <div class="input-group">
-                                <input type="text"class="form-control" placeholder="Nombre" name="procesadorNombre" id="procesadorNombre">
                                 <input type="number" placeholder="Capacidad" step=".01" class="form-control" name="procesadorGHZ" id="procesadorGHZ">
                                 <span class="input-group-text" id="basic-addon1">GHZ</span>
                             </div>
@@ -107,14 +128,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md">
-                            <div class="form-floating">
-                                <label>Foto</label>
-                                <input type="file" value="Foto" name="foto" class="form-control">
-                            </div>
-                        </div>
-
-                        
                         
                     </div>
                     <div class="row g-3">
@@ -145,6 +158,5 @@
         </div>
     </div>
 
-    <script type="module" src="panels/add/add.js"></script>
 
 </div>

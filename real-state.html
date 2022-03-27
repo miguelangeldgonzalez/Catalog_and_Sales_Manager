@@ -31,8 +31,14 @@
 					<a class="nav-link" href="profile.html" id="title"></a>
 				</li>
 
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="true" href="#">Inmuebles</a>
+				<li class="nav-item active" aria-current="true">
+					<a href="#" class="nav-link">Catálogo</a>
+
+					<ul class="navbar-nav submenu">
+						<li class="nav-item active" aria-current="true"><a class="nav-link" href="#">Inmuebles</a></li>
+						<li class="nav-item" aria-current="true"><a class="nav-link" href="devices.html">Dispositivos</a> </li>
+					</ul>
+
 				</li>
 			</ul>
 		</div>
@@ -57,8 +63,10 @@
 							</div>
 						</div>
 
-						<button class="back">Back</button>
-						<button class="front">Front</button>
+						<div class="carrousel-buttons" style="width: 100%; display:flex; justify-content: center;">
+							<input type="image" src="img/icons/left_arrow.png" class="back">
+							<input type="image" src="img/icons/right_arrow.png" class="front">
+						</div>
 
 						<form enctype="multipart/form-data" class="w-75 my-2" id="form-edit-image" style="display: none;" method="POST">
 							<label>Cambiar Foto</label>
@@ -70,19 +78,19 @@
 							<table class="table-stripped table">
 								<tr>
 									<td class="table-dark">Precio</td>
-									<td><input type="text" class="form-control form-edit" name="cost" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="cost" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Habitaciones</td>
-									<td><input type="text" class="form-control form-edit" name="rooms" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="rooms" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"  readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Baños</td>
-									<td><input type="text" class="form-control form-edit" name="bathrooms" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit"  name="bathrooms" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Metros Caudrados</td>
-									<td><input type="text" class="form-control form-edit" name="square_meters" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="square_meters" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Propietario</td>
@@ -90,7 +98,7 @@
 								</tr>
 								<tr>
 									<td class="table-dark">Número del Propietario</td>
-									<td><input type="text" class="form-control form-edit" name="owner_phone" readonly="true"></td>
+									<td><input type="text" class="form-control form-edit" name="owner_phone" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" readonly="true"></td>
 								</tr>
 								<tr>
 									<td class="table-dark">Inicio del Contrato de Captación</td>
@@ -104,7 +112,13 @@
 									<td class="table-dark">Asesor</td>
 									<td>
 										<input type="text" class="form-control form-edit adviser-input" name="adviser" readonly="true">
-										<select class="form-control form-edit adviser-select" name="adviser" readonly="true"></select>
+										<select class="form-control form-edit adviser-select" id="adviser-edit" name="adviser" readonly="true"></select>
+									</td>
+								</tr>
+								<tr>
+									<td class="table-dark">Comisión</td>
+									<td>
+										<input type="text" class="form-control form-edit" name="comission" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" readonly="true">
 									</td>
 								</tr>
 								<tr>
@@ -127,7 +141,7 @@
 				<div class="location">
 					<div class="form-floating" id="location" style="display: none">
 						<label>Ubicación</label>
-						<input type="text" class="form-control form-edit" name="location" >
+						<input type="text" class="form-control form-edit" id="location-input" name="location" >
 					</div>
 
 					<div class="d-flex" id="map"></div>
@@ -242,7 +256,7 @@
 				
 									<div class="col-md">
 										<div class="form-floating">
-											<label>Principio del Contrato de Captación</label>
+											<label>Principio del Contrato de <br>Captación</label>
 											<div class="input-group">
 												<input type="date" stye="cursor:text"class="form-control" name="start_catchment_contract" required>
 											</div>
@@ -280,9 +294,27 @@
 
 								<!-- Submit button -->
 								<div class="row g-3">
+
+									<div class="col-md" id="adviser-add">
+										<div class="form-floating">
+											<label>Asesor</label>
+												<select name="adviser" class="form-control adviser-add-select"></select>
+										</div>
+									</div>
+
+									<div class="col-md">
+										<div class="form-floating">
+											<label>Comisión</label>
+											<div class="input-group">
+													<input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" class="form-control" name="comission" required>
+													<span class="input-group-text" id="basic-addon1">%</span>
+											</div>
+										</div>
+									</div>
+
 									   <div class="col-md">
-										   <div class="form-floating">
-											   <input type="submit" class=" w-25 form-control btn btn-success" value="Enviar">
+										   <div class="form-floating" style="margin-top: 30px">
+											   <input type="submit" class="form-control btn btn-success" value="Enviar">
 										   </div>
 									   </div>
 								</div>
